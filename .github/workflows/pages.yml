@@ -22,8 +22,23 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # A release runs on its tag, and Pages only promotes deployments from the default branch.
+  # Re-dispatch the workflow on main so the published release reaches the live site.
+  refresh:
+    name: Refresh
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Deploy main again
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
+
   deploy:
     name: Deploy
+    if: github.event_name != 'release'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
