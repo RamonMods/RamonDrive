@@ -1,6 +1,7 @@
 package com.ramon.ramondrive.presentation.gallery
 
 import com.ramon.ramondrive.core.common.AppError
+import com.ramon.ramondrive.core.files.BulkRename
 import com.ramon.ramondrive.presentation.common.UiText
 import com.ramon.ramondrive.presentation.common.toUiText
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,6 +17,8 @@ import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import com.ramon.ramondrive.resources.Res
+import com.ramon.ramondrive.resources.files_bulk_rename_done
+import com.ramon.ramondrive.resources.files_bulk_rename_partial
 import com.ramon.ramondrive.resources.files_cut_count
 import com.ramon.ramondrive.resources.files_queued_for_download
 import com.ramon.ramondrive.resources.trash_deleted_permanently
@@ -395,6 +398,45 @@ class GalleryViewModel(
         _renameTarget.value = null
         clearSelection()
         viewModelScope.launch { fileRepository.renameFile(target.id, newName).reportFailure() }
+    }
+
+    private val _bulkRenameTargets = MutableStateFlow<List<DriveFile>?>(null)
+    val bulkRenameTargets: StateFlow<List<DriveFile>?> = _bulkRenameTargets.asStateFlow()
+
+    fun requestBulkRename() {
+        viewModelScope.launch {
+            val files = selection.value.mapNotNull { fileRepository.getFile(it) }
+            _bulkRenameTargets.value = files.takeIf { it.size > 1 }
+        }
+    }
+
+    fun dismissBulkRename() {
+        _bulkRenameTargets.value = null
+    }
+
+    fun confirmBulkRename(pattern: String) {
+        val targets = _bulkRenameTargets.value ?: return
+        _bulkRenameTargets.value = null
+        clearSelection()
+        viewModelScope.launch {
+            var renamed = 0
+            var failures = 0
+            targets.forEachIndexed { index, file ->
+                val newName = BulkRename.nameFor(pattern, file.name, index + 1)
+                if (newName == file.name) return@forEachIndexed
+                when (fileRepository.renameFile(file.id, newName)) {
+                    is AppResult.Success -> renamed++
+                    is AppResult.Failure -> failures++
+                }
+            }
+            _messages.tryEmit(
+                if (failures == 0) {
+                    UiText.Resource(Res.string.files_bulk_rename_done, renamed)
+                } else {
+                    UiText.Resource(Res.string.files_bulk_rename_partial, renamed, failures)
+                }
+            )
+        }
     }
 
     fun favoriteSelected(favorite: Boolean) {

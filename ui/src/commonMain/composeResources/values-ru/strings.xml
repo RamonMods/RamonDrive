@@ -381,6 +381,12 @@
     <string name="files_nothing_here_yet">Здесь пока ничего нет</string>
     <string name="files_only_files_verified_telegram">С устройства будут удалены только файлы с подтвержденной копией в Telegram.</string>
     <string name="files_rename_file">Переименовать файл</string>
+    <string name="files_bulk_rename">Переименовать несколько</string>
+    <string name="files_bulk_rename_pattern">Шаблон</string>
+    <string name="files_bulk_rename_hint">Используйте {n} для нумерации, {name} для исходного имени и {ext} для расширения.</string>
+    <string name="files_bulk_rename_preview">Предпросмотр</string>
+    <string name="files_bulk_rename_done">Переименовано: %1$d</string>
+    <string name="files_bulk_rename_partial">Переименовано: %1$d, ошибок: %2$d</string>
     <string name="files_rename_folder">Переименовать папку</string>
     <string name="files_root_name">Файлы</string>
     <string name="files_search">Поиск</string>

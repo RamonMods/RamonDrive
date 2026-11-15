@@ -353,6 +353,12 @@
     <string name="files_nothing_here_yet">Belum ada apa-apa di sini</string>
     <string name="files_only_files_verified_telegram">Hanya file dengan cadangan terverifikasi di Telegram yang akan dihapus dari perangkat ini.</string>
     <string name="files_rename_file">Ganti nama file</string>
+    <string name="files_bulk_rename">Ganti nama massal</string>
+    <string name="files_bulk_rename_pattern">Pola</string>
+    <string name="files_bulk_rename_hint">Gunakan {n} untuk penomoran, {name} untuk nama asli, dan {ext} untuk ekstensi.</string>
+    <string name="files_bulk_rename_preview">Pratinjau</string>
+    <string name="files_bulk_rename_done">%1$d diganti nama</string>
+    <string name="files_bulk_rename_partial">%1$d diganti nama, %2$d gagal</string>
     <string name="files_rename_folder">Ganti nama folder</string>
     <string name="files_root_name">File</string>
     <string name="files_search">Cari</string>

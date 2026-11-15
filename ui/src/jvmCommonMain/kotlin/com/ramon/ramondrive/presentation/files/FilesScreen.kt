@@ -128,6 +128,7 @@ import com.ramon.ramondrive.presentation.components.EmptyState
 import com.ramon.ramondrive.presentation.components.FileGridItem
 import com.ramon.ramondrive.presentation.components.SortMenu
 import com.ramon.ramondrive.presentation.components.FileInfoSheet
+import com.ramon.ramondrive.presentation.components.BulkRenameDialog
 import com.ramon.ramondrive.presentation.components.FileListItem
 import com.ramon.ramondrive.presentation.components.FolderGridItem
 import com.ramon.ramondrive.presentation.components.FolderInfoSheet
@@ -204,6 +205,7 @@ import com.ramon.ramondrive.resources.files_new_folder
 import com.ramon.ramondrive.resources.files_nothing_here_yet
 import com.ramon.ramondrive.resources.files_only_files_verified_telegram
 import com.ramon.ramondrive.resources.files_rename_file
+import com.ramon.ramondrive.resources.files_bulk_rename
 import com.ramon.ramondrive.resources.files_rename_folder
 import com.ramon.ramondrive.resources.files_search
 import com.ramon.ramondrive.resources.files_share_destination_confirm
@@ -248,6 +250,7 @@ fun FilesScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val renameTarget by viewModel.renameTarget.collectAsStateWithLifecycle()
+    val bulkRenameTargets by viewModel.bulkRenameTargets.collectAsStateWithLifecycle()
     val files = viewModel.pagedFiles.collectAsLazyPagingItems()
     val infoTarget by viewModel.infoTarget.collectAsStateWithLifecycle()
     val refreshing by viewModel.refreshing.collectAsStateWithLifecycle()
@@ -518,6 +521,14 @@ fun FilesScreen(
                                                     label = stringResource(Res.string.common_rename),
                                                     icon = Icons.Filled.DriveFileRenameOutline
                                                 ) { viewModel.requestRenameSelected() }
+                                            )
+                                        }
+                                        if (state.selectionCount + state.folderSelection.size > 1) {
+                                            add(
+                                                MenuAction(
+                                                    label = stringResource(Res.string.files_bulk_rename),
+                                                    icon = Icons.Filled.DriveFileRenameOutline
+                                                ) { viewModel.requestBulkRename() }
                                             )
                                         }
                                         if (filesOnly) {
@@ -894,6 +905,13 @@ fun FilesScreen(
             confirmLabel = stringResource(Res.string.common_rename),
             onConfirm = viewModel::confirmRename,
             onDismiss = viewModel::dismissRename
+        )
+    }
+    bulkRenameTargets?.let { targets ->
+        BulkRenameDialog(
+            names = targets.map { it.name },
+            onConfirm = viewModel::confirmBulkRename,
+            onDismiss = viewModel::dismissBulkRename
         )
     }
     if (confirmTrash) {

@@ -339,6 +339,12 @@
     <string name="files_nothing_here_yet">这里还没有内容</string>
     <string name="files_only_files_verified_telegram">只有已确认备份到 Telegram 的文件才会从本设备移除。</string>
     <string name="files_rename_file">重命名文件</string>
+    <string name="files_bulk_rename">批量重命名</string>
+    <string name="files_bulk_rename_pattern">模板</string>
+    <string name="files_bulk_rename_hint">使用 {n} 表示编号，{name} 表示原名称，{ext} 表示扩展名。</string>
+    <string name="files_bulk_rename_preview">预览</string>
+    <string name="files_bulk_rename_done">已重命名 %1$d 个</string>
+    <string name="files_bulk_rename_partial">已重命名 %1$d 个，%2$d 个失败</string>
     <string name="files_rename_folder">重命名文件夹</string>
     <string name="files_root_name">文件</string>
     <string name="files_search">搜索</string>

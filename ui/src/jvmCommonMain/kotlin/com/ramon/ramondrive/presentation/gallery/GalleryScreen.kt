@@ -20,6 +20,7 @@ import com.ramon.ramondrive.resources.common_organize
 import com.ramon.ramondrive.resources.common_remove_from_offline
 import com.ramon.ramondrive.resources.common_storage_actions
 import com.ramon.ramondrive.resources.files_archive
+import com.ramon.ramondrive.resources.files_bulk_rename
 import com.ramon.ramondrive.resources.files_hide
 import com.ramon.ramondrive.resources.files_sort
 import com.ramon.ramondrive.resources.preview_remove_favorites
@@ -133,6 +134,7 @@ import com.ramon.ramondrive.presentation.components.EmptyState
 import com.ramon.ramondrive.presentation.components.FileGridItem
 import com.ramon.ramondrive.presentation.components.FileListItem
 import com.ramon.ramondrive.presentation.components.RenameDialog
+import com.ramon.ramondrive.presentation.components.BulkRenameDialog
 import com.ramon.ramondrive.presentation.components.SortMenu
 import com.ramon.ramondrive.presentation.components.keyboardCollection
 import com.ramon.ramondrive.presentation.components.keyboardCollectionItem
@@ -268,6 +270,7 @@ fun GalleryScreen(
     var showMovePicker by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val renameTarget by viewModel.renameTarget.collectAsStateWithLifecycle()
+    val bulkRenameTargets by viewModel.bulkRenameTargets.collectAsStateWithLifecycle()
 
     CollectSnackbarMessages(viewModel.messages, snackbarHostState)
 
@@ -308,6 +311,13 @@ fun GalleryScreen(
             confirmLabel = stringResource(Res.string.common_rename),
             onConfirm = viewModel::confirmRename,
             onDismiss = viewModel::dismissRename
+        )
+    }
+    bulkRenameTargets?.let { targets ->
+        BulkRenameDialog(
+            names = targets.map { it.name },
+            onConfirm = viewModel::confirmBulkRename,
+            onDismiss = viewModel::dismissBulkRename
         )
     }
 
@@ -451,6 +461,14 @@ fun GalleryScreen(
                                             label = stringResource(Res.string.common_rename),
                                             icon = Icons.Filled.DriveFileRenameOutline
                                         ) { viewModel.requestRenameSelected() }
+                                    )
+                                }
+                                if (state.selection.size > 1) {
+                                    add(
+                                        MenuAction(
+                                            label = stringResource(Res.string.files_bulk_rename),
+                                            icon = Icons.Filled.DriveFileRenameOutline
+                                        ) { viewModel.requestBulkRename() }
                                     )
                                 }
                                 add(

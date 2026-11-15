@@ -356,6 +356,12 @@
     <string name="files_nothing_here_yet">Nada aqui ainda</string>
     <string name="files_only_files_verified_telegram">Apenas arquivos com backup verificado no Telegram serão removidos deste dispositivo.</string>
     <string name="files_rename_file">Renomear arquivo</string>
+    <string name="files_bulk_rename">Renomear em lote</string>
+    <string name="files_bulk_rename_pattern">Padrão</string>
+    <string name="files_bulk_rename_hint">Use {n} para numeração, {name} para o nome original e {ext} para a extensão.</string>
+    <string name="files_bulk_rename_preview">Prévia</string>
+    <string name="files_bulk_rename_done">%1$d renomeados</string>
+    <string name="files_bulk_rename_partial">%1$d renomeados, %2$d falharam</string>
     <string name="files_rename_folder">Renomear pasta</string>
     <string name="files_root_name">Arquivos</string>
     <string name="files_search">Pesquisar</string>

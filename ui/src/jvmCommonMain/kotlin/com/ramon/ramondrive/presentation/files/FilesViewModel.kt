@@ -7,6 +7,7 @@ import androidx.navigation.toRoute
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.ramon.ramondrive.core.common.AppResult
+import com.ramon.ramondrive.core.files.BulkRename
 import com.ramon.ramondrive.core.files.DeleteConsentRequest
 import com.ramon.ramondrive.core.files.FileImporter
 import com.ramon.ramondrive.core.files.ImportSource
@@ -35,6 +36,8 @@ import com.ramon.ramondrive.presentation.components.zoomedIn
 import com.ramon.ramondrive.presentation.components.zoomedOut
 import com.ramon.ramondrive.presentation.navigation.Route
 import com.ramon.ramondrive.resources.Res
+import com.ramon.ramondrive.resources.files_bulk_rename_done
+import com.ramon.ramondrive.resources.files_bulk_rename_partial
 import com.ramon.ramondrive.resources.files_copied_all
 import com.ramon.ramondrive.resources.files_copied_partial
 import com.ramon.ramondrive.resources.files_cut_count
@@ -387,6 +390,53 @@ class FilesViewModel(
             fileRepository.renameFolder(id, newName).let {
                 if (it is AppResult.Failure) _messages.tryEmit(it.error.toUiText())
             }
+        }
+    }
+
+    private val _bulkRenameTargets = MutableStateFlow<List<RenameTarget>?>(null)
+    val bulkRenameTargets: StateFlow<List<RenameTarget>?> = _bulkRenameTargets.asStateFlow()
+
+    fun requestBulkRename() {
+        viewModelScope.launch {
+            val files = selection.value.mapNotNull { fileRepository.getFile(it) }
+            val folders = folderSelection.value.mapNotNull { fileRepository.getFolder(it) }
+            val targets = files.map { RenameTarget(it.id, it.name, isFolder = false) } +
+                    folders.map { RenameTarget(it.id, it.name, isFolder = true) }
+            _bulkRenameTargets.value = targets.takeIf { it.size > 1 }
+        }
+    }
+
+    fun dismissBulkRename() {
+        _bulkRenameTargets.value = null
+    }
+
+    fun confirmBulkRename(pattern: String) {
+        val targets = _bulkRenameTargets.value ?: return
+        _bulkRenameTargets.value = null
+        clearSelection()
+        viewModelScope.launch {
+            var renamed = 0
+            var failures = 0
+            targets.forEachIndexed { index, target ->
+                val newName = BulkRename.nameFor(pattern, target.name, index + 1)
+                if (newName == target.name) return@forEachIndexed
+                val result = if (target.isFolder) {
+                    fileRepository.renameFolder(target.id, newName)
+                } else {
+                    fileRepository.renameFile(target.id, newName)
+                }
+                when (result) {
+                    is AppResult.Success -> renamed++
+                    is AppResult.Failure -> failures++
+                }
+            }
+            _messages.tryEmit(
+                if (failures == 0) {
+                    UiText.Resource(Res.string.files_bulk_rename_done, renamed)
+                } else {
+                    UiText.Resource(Res.string.files_bulk_rename_partial, renamed, failures)
+                }
+            )
         }
     }
 
