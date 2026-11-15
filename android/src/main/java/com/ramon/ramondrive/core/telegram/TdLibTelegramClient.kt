@@ -496,6 +496,7 @@ class TdLibTelegramClient(
                 )
             )
             SafeLog.d(TAG, "Created a new storage channel")
+            applyChannelPhoto(chat.id)
             chat.id
         }
 
@@ -514,7 +515,30 @@ class TdLibTelegramClient(
             )
         )
         SafeLog.d(TAG, "Created an additional storage channel")
+        applyChannelPhoto(chat.id)
         return StorageChannel(chatId = chat.id, title = title, documentCount = 0)
+    }
+
+    private fun channelPhotoFile(): File? = runCatching {
+        val target = File(context.cacheDir, CHANNEL_PHOTO_NAME)
+        if (!target.exists() || target.length() == 0L) {
+            context.assets.open(CHANNEL_PHOTO_NAME).use { input ->
+                target.outputStream().use { output -> input.copyTo(output) }
+            }
+        }
+        target
+    }.onFailure { SafeLog.w(TAG, "Could not prepare the channel photo", it) }.getOrNull()
+
+    private suspend fun applyChannelPhoto(chatId: Long) {
+        val photo = channelPhotoFile() ?: return
+        runCatching {
+            send(
+                TdApi.SetChatPhoto(
+                    chatId,
+                    TdApi.InputChatPhotoStatic(TdApi.InputFileLocal(photo.absolutePath))
+                )
+            )
+        }.onFailure { SafeLog.w(TAG, "Could not set the channel photo", it) }
     }
 
     override suspend fun editDocument(
@@ -1343,6 +1367,7 @@ class TdLibTelegramClient(
 
     companion object {
         private const val TAG = "TdLibTelegramClient"
+        private const val CHANNEL_PHOTO_NAME = "ramondrive_channel.jpg"
         private const val WRONG_DATABASE_KEY_CODE = 401
  const val CLIENT_WAIT_LIMIT_MS = 5_000
         private const val REQUEST_TIMEOUT_MS = 45_000L

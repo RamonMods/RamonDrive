@@ -496,6 +496,7 @@ class DesktopTelegramClient(
                 )
             )
             SafeLog.d(TAG, "Created a new storage channel")
+            applyChannelPhoto(chat.id)
             chat.id
         }
 
@@ -514,7 +515,33 @@ class DesktopTelegramClient(
             )
         )
         SafeLog.d(TAG, "Created an additional storage channel")
+        applyChannelPhoto(chat.id)
         return StorageChannel(chatId = chat.id, title = title, documentCount = 0)
+    }
+
+    private fun channelPhotoFile(): File? = runCatching {
+        val target = File(storagePaths.cacheDir, CHANNEL_PHOTO_NAME)
+        if (!target.exists() || target.length() == 0L) {
+            target.parentFile?.mkdirs()
+            val input = DesktopTelegramClient::class.java.getResourceAsStream("/$CHANNEL_PHOTO_NAME")
+                ?: return null
+            input.use { source ->
+                target.outputStream().use { output -> source.copyTo(output) }
+            }
+        }
+        target
+    }.onFailure { SafeLog.w(TAG, "Could not prepare the channel photo", it) }.getOrNull()
+
+    private suspend fun applyChannelPhoto(chatId: Long) {
+        val photo = channelPhotoFile() ?: return
+        runCatching {
+            send(
+                TdApi.SetChatPhoto(
+                    chatId,
+                    TdApi.InputChatPhotoStatic(TdApi.InputFileLocal(photo.absolutePath))
+                )
+            )
+        }.onFailure { SafeLog.w(TAG, "Could not set the channel photo", it) }
     }
 
     override suspend fun editDocument(
@@ -1337,6 +1364,7 @@ class DesktopTelegramClient(
 
     companion object {
         private const val TAG = "DesktopTelegramClient"
+        private const val CHANNEL_PHOTO_NAME = "ramondrive_channel.jpg"
         private const val CLIENT_WAIT_LIMIT_MS = 5_000
         private const val REQUEST_TIMEOUT_MS = 45_000L
         private const val PROXY_TEST_DC = 2
