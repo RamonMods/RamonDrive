@@ -15,3 +15,7 @@ local.properties
 signing.properties
 release/
 
+# JVM crash logs from interrupted builds
+hs_err_pid*.log
+replay_pid*.log
+
