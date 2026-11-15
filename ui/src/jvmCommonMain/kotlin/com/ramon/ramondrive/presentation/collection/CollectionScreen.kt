@@ -23,6 +23,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -37,9 +38,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.ramon.ramondrive.presentation.common.AppBackHandler
+import com.ramon.ramondrive.presentation.common.CollectSnackbarMessages
 import com.ramon.ramondrive.presentation.common.isInitialLoad
+import com.ramon.ramondrive.presentation.components.BottomBarSnackbarHost
 import com.ramon.ramondrive.presentation.components.CollectionShortcuts
-import com.ramon.ramondrive.presentation.components.ConfirmDialog
+import com.ramon.ramondrive.presentation.components.DeleteChoiceDialog
 import com.ramon.ramondrive.presentation.components.EmptyState
 import com.ramon.ramondrive.presentation.components.FileListItem
 import com.ramon.ramondrive.presentation.components.FolderRow
@@ -57,12 +60,12 @@ import com.ramon.ramondrive.resources.collection_offline_download_missing
 import com.ramon.ramondrive.resources.collection_remove_from
 import com.ramon.ramondrive.resources.common_back
 import com.ramon.ramondrive.resources.common_clear_selection
-import com.ramon.ramondrive.resources.common_confirm_trash_count_title
 import com.ramon.ramondrive.resources.common_deselect_all
 import com.ramon.ramondrive.resources.common_move_trash
-import com.ramon.ramondrive.resources.common_restore_trash_emptied
 import com.ramon.ramondrive.resources.common_select_all
 import com.ramon.ramondrive.resources.common_selection_count
+import com.ramon.ramondrive.resources.delete_choice_message
+import com.ramon.ramondrive.resources.delete_choice_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -85,18 +88,23 @@ fun CollectionScreen(
     val missingCount by viewModel.missingCount.collectAsStateWithLifecycle()
     val offline = viewModel.type == CollectionType.AVAILABLE_OFFLINE
     var confirmTrash by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    CollectSnackbarMessages(viewModel.messages, snackbarHostState)
 
     AppBackHandler(enabled = selectionMode) { viewModel.clearSelection() }
 
     if (confirmTrash) {
-        ConfirmDialog(
-            title = stringResource(Res.string.common_confirm_trash_count_title, selectionCount),
-            message = stringResource(Res.string.common_restore_trash_emptied),
-            confirmLabel = stringResource(Res.string.common_move_trash),
-            destructive = true,
-            onConfirm = {
+        DeleteChoiceDialog(
+            title = stringResource(Res.string.delete_choice_title),
+            message = stringResource(Res.string.delete_choice_message),
+            onMoveToTrash = {
                 confirmTrash = false
                 viewModel.trashSelected()
+            },
+            onDeleteForever = {
+                confirmTrash = false
+                viewModel.deleteSelectedPermanently()
             },
             onDismiss = { confirmTrash = false }
         )
@@ -106,6 +114,12 @@ fun CollectionScreen(
     val lifted by rememberToolbarLift(listState)
 
     Scaffold(
+        snackbarHost = {
+            BottomBarSnackbarHost(
+                hostState = snackbarHostState,
+                applyInset = !selectionMode
+            )
+        },
         topBar = {
             TopAppBar(
                 colors = liftedTopAppBarColors(lifted),

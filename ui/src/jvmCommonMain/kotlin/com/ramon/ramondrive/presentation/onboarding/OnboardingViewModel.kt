@@ -22,11 +22,13 @@ import com.ramon.ramondrive.resources.onboarding_api_hash_short
 import com.ramon.ramondrive.resources.onboarding_api_id_number
 import com.ramon.ramondrive.resources.onboarding_enter_phone
 import com.ramon.ramondrive.resources.onboarding_no_account
+import com.ramon.ramondrive.resources.onboarding_qr_failed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -115,6 +117,8 @@ class OnboardingViewModel(
                     if (current.step in listOf(
                             OnboardingStep.WELCOME,
                             OnboardingStep.PHONE,
+                            OnboardingStep.EMAIL_ADDRESS,
+                            OnboardingStep.EMAIL_CODE,
                             OnboardingStep.CODE,
                             OnboardingStep.PASSWORD,
                             OnboardingStep.API_CREDENTIALS
@@ -214,9 +218,40 @@ class OnboardingViewModel(
      * just reopens the page.
      */
     fun startQrLogin() {
-        _uiState.update { it.copy(qrMode = true, error = null) }
-        if (_uiState.value.qrLink != null) return
-        runAction { telegramAuthRepository.requestQrCodeAuthentication() }
+        if (_uiState.value.qrLink != null) {
+            _uiState.update { it.copy(qrMode = true, error = null) }
+            return
+        }
+        _uiState.update { it.copy(qrMode = true, working = true, error = null) }
+        viewModelScope.launch {
+            when (val result = telegramAuthRepository.requestQrCodeAuthentication()) {
+                is AppResult.Failure -> if (_uiState.value.qrMode) {
+                    _uiState.update {
+                        it.copy(working = false, error = result.error.toUiText())
+                    }
+                }
+
+                is AppResult.Success -> {
+                    // TDLib answers the request before it pushes the link; without this wait a
+                    // silent failure would leave the screen spinning forever.
+                    val link = withTimeoutOrNull(QR_LINK_TIMEOUT_MS.milliseconds) {
+                        telegramAuthRepository.authState
+                            .mapNotNull { state ->
+                                (state as? TelegramAuthState.WaitingForQrScan)?.link
+                            }
+                            .first()
+                    }
+                    if (link == null && _uiState.value.qrMode) {
+                        _uiState.update {
+                            it.copy(
+                                working = false,
+                                error = UiText.Resource(Res.string.onboarding_qr_failed)
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -224,7 +259,7 @@ class OnboardingViewModel(
      * reach the phone step.
      */
     fun cancelQrLogin() {
-        _uiState.update { it.copy(qrMode = false, qrLink = null, error = null) }
+        _uiState.update { it.copy(qrMode = false, qrLink = null, working = false, error = null) }
         viewModelScope.launch { telegramAuthRepository.restartAuthentication() }
     }
 
@@ -377,6 +412,7 @@ class OnboardingViewModel(
 
     private companion object {
         const val COUNTRY_LOAD_TIMEOUT_MS = 8_000L
+        const val QR_LINK_TIMEOUT_MS = 20_000L
         const val DEFAULT_DRIVE_LABEL = ""
     }
 }

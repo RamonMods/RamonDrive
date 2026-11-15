@@ -100,19 +100,19 @@ import com.ramon.ramondrive.resources.common_actions
 import com.ramon.ramondrive.resources.common_add_favorites
 import com.ramon.ramondrive.resources.common_back
 import com.ramon.ramondrive.resources.common_clear_selection
-import com.ramon.ramondrive.resources.common_confirm_trash_count_title
 import com.ramon.ramondrive.resources.common_deselect_all
 import com.ramon.ramondrive.resources.common_download
 import com.ramon.ramondrive.resources.common_move_trash
 import com.ramon.ramondrive.resources.common_rename
 import com.ramon.ramondrive.resources.common_rename_file
-import com.ramon.ramondrive.resources.common_restore_trash_emptied
 import com.ramon.ramondrive.resources.common_select_all
 import com.ramon.ramondrive.resources.common_selection_count
 import com.ramon.ramondrive.resources.common_upload
 import com.ramon.ramondrive.resources.date_days_ago
 import com.ramon.ramondrive.resources.date_today
 import com.ramon.ramondrive.resources.date_yesterday
+import com.ramon.ramondrive.resources.delete_choice_message
+import com.ramon.ramondrive.resources.delete_choice_title
 import com.ramon.ramondrive.resources.gallery_albums_appear_organise_media
 import com.ramon.ramondrive.resources.gallery_no_albums
 import com.ramon.ramondrive.resources.gallery_no_media
@@ -126,7 +126,7 @@ import com.ramon.ramondrive.presentation.common.Formatters
 import com.ramon.ramondrive.presentation.common.isInitialLoad
 import com.ramon.ramondrive.presentation.components.RefreshAction
 import com.ramon.ramondrive.presentation.components.RefreshableContent
-import com.ramon.ramondrive.presentation.components.ConfirmDialog
+import com.ramon.ramondrive.presentation.components.DeleteChoiceDialog
 import com.ramon.ramondrive.presentation.components.EmptyState
 import com.ramon.ramondrive.presentation.components.FileGridItem
 import com.ramon.ramondrive.presentation.components.FileListItem
@@ -284,17 +284,16 @@ fun GalleryScreen(
     }
 
     if (confirmTrash) {
-        ConfirmDialog(
-            title = stringResource(
-                Res.string.common_confirm_trash_count_title,
-                state.selection.size
-            ),
-            message = stringResource(Res.string.common_restore_trash_emptied),
-            confirmLabel = stringResource(Res.string.common_move_trash),
-            destructive = true,
-            onConfirm = {
+        DeleteChoiceDialog(
+            title = stringResource(Res.string.delete_choice_title),
+            message = stringResource(Res.string.delete_choice_message),
+            onMoveToTrash = {
                 confirmTrash = false
                 viewModel.trashSelected()
+            },
+            onDeleteForever = {
+                confirmTrash = false
+                viewModel.deleteSelectedPermanently()
             },
             onDismiss = { confirmTrash = false }
         )

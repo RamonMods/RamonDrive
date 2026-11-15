@@ -1360,7 +1360,7 @@ class DesktopTelegramClient(
         is TdApi.AuthenticationCodeTypeFragment -> length
         is TdApi.AuthenticationCodeTypeFirebaseAndroid -> length
         else -> null
-    }
+    }.takeIf { it != null && it > 0 }
 
     companion object {
         private const val TAG = "DesktopTelegramClient"

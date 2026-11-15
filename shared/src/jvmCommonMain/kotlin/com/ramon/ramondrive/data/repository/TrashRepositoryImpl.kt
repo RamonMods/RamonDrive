@@ -2,6 +2,8 @@ package com.ramon.ramondrive.data.repository
 
 import com.ramon.ramondrive.core.common.AppError
 import com.ramon.ramondrive.core.files.AppStoragePaths
+import com.ramon.ramondrive.core.files.DownloadWriter
+import com.ramon.ramondrive.core.files.LocalCopyDeleter
 import com.ramon.ramondrive.core.common.AppResult
 import com.ramon.ramondrive.core.common.SafeLog
 import com.ramon.ramondrive.core.crypto.SecureFileDeleter
@@ -36,6 +38,8 @@ class TrashRepositoryImpl(
     private val thumbnailDao: ThumbnailDao,
     private val telegramClient: TelegramClient,
     private val secureFileDeleter: SecureFileDeleter,
+    private val localCopyDeleter: LocalCopyDeleter,
+    private val downloadWriter: DownloadWriter,
     private val publishScheduler: PublishScheduler,
     private val pendingDeleteDao: PendingDeleteDao,
     private val filePartDao: FilePartDao,
@@ -205,7 +209,21 @@ class TrashRepositoryImpl(
                 secureFileDeleter.delete(File(thumb.path))
                 thumbnailDao.delete(entity.id)
             }
-            entity.localPath?.let { path -> deleteStagedCopy(File(path)) }
+        }
+        val stagedPaths = entities.mapNotNull { it.localPath }.filter { isStagedPath(it) }
+        val downloadedPaths = entities.mapNotNull { it.localPath }
+            .filter { !isStagedPath(it) && downloadWriter.owns(it) }
+        stagedPaths.forEach { path -> secureFileDeleter.delete(File(path)) }
+        if (downloadedPaths.isNotEmpty()) {
+            val cleanup = runCatching { localCopyDeleter.delete(downloadedPaths.distinct()) }
+                .onFailure { SafeLog.w(TAG, "Deleting downloaded copies failed", it) }
+                .getOrNull()
+            when {
+                cleanup == null -> Unit
+                cleanup.consentRequest != null ->
+                    SafeLog.w(TAG, "Downloaded copies are waiting for delete consent")
+                else -> SafeLog.d(TAG, "Deleted ${cleanup.deletedCount} downloaded copies")
+            }
         }
         ids.chunked(SQL_BATCH).forEach { chunk ->
             backupDao.deleteRecordsForFiles(chunk)
@@ -219,9 +237,17 @@ class TrashRepositoryImpl(
     }
 
     override suspend fun deleteFolderPermanently(id: String): AppResult<Unit> {
-        val folderIds = collectTrashedDescendantFolderIds(id)
+        val folder = folderDao.byId(id) ?: return AppResult.Success(Unit)
+        val folderIds = if (folder.trashedAt != null) {
+            collectTrashedDescendantFolderIds(id)
+        } else {
+            collectDescendantFolderIds(id)
+        }
         val chatId = activeChannel.id()
-        val fileIds = fileDao.trashedInFolders(folderIds, chatId).map { it.id }
+        val fileIds = folderIds
+            .flatMap { folderId -> fileDao.allFilesInFolder(folderId, chatId) }
+            .map { it.id }
+            .distinct()
         val result = deleteFilesPermanently(fileIds)
         if (result is AppResult.Failure) return result
         recordDeleted(folderIds.map { it to chatId })
@@ -238,11 +264,10 @@ class TrashRepositoryImpl(
         )
     }
 
-    /** Only staging copies the app made are removed; the user's own files are never touched. */
-    private fun deleteStagedCopy(file: File) {
+    /** Only staging copies the app made are removed with a secure overwrite. */
+    private fun isStagedPath(path: String): Boolean {
         val staging = File(storagePaths.filesDir, IMPORT_DIR)
-        if (!file.absolutePath.startsWith(staging.absolutePath + File.separator)) return
-        secureFileDeleter.delete(file)
+        return path.startsWith(staging.absolutePath + File.separator)
     }
 
     override suspend fun emptyTrash(): AppResult<Unit> {

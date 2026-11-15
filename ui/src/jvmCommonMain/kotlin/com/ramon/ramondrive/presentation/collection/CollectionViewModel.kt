@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.ramon.ramondrive.core.common.AppResult
 import com.ramon.ramondrive.domain.model.DriveFile
 import com.ramon.ramondrive.domain.model.DriveFolder
 import com.ramon.ramondrive.domain.model.FileQuerySpec
@@ -16,12 +17,19 @@ import com.ramon.ramondrive.domain.repository.FileRepository
 import com.ramon.ramondrive.domain.repository.TransferRepository
 import com.ramon.ramondrive.domain.repository.TrashRepository
 import com.ramon.ramondrive.domain.usecase.MakeAvailableOfflineUseCase
+import com.ramon.ramondrive.presentation.common.UiText
+import com.ramon.ramondrive.presentation.common.toUiText
 import com.ramon.ramondrive.presentation.navigation.Route
 import com.ramon.ramondrive.presentation.preview.PreviewSequence
+import com.ramon.ramondrive.resources.Res
+import com.ramon.ramondrive.resources.trash_deleted_permanently
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
@@ -29,6 +37,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CollectionViewModel(
     savedStateHandle: SavedStateHandle,
@@ -37,6 +46,9 @@ class CollectionViewModel(
     private val transferRepository: TransferRepository,
     private val makeAvailableOffline: MakeAvailableOfflineUseCase
 ) : ViewModel() {
+
+    private val _messages = MutableSharedFlow<UiText>(extraBufferCapacity = 8)
+    val messages = _messages.asSharedFlow()
 
     val type: CollectionType = runCatching {
         CollectionType.valueOf(savedStateHandle.toRoute<Route.Collection>().type)
@@ -184,6 +196,39 @@ class CollectionViewModel(
         viewModelScope.launch {
             if (ids.isNotEmpty()) trashRepository.moveFilesToTrash(ids)
             folderIds.forEach { trashRepository.moveFolderToTrash(it) }
+        }
+    }
+
+    fun deleteSelectedPermanently() {
+        val ids = _selection.value.toList()
+        val folderIds = _folderSelection.value.toList()
+        val total = ids.size + folderIds.size
+        clearSelection()
+        if (total == 0) return
+        viewModelScope.launch {
+            var failed = 0
+            var lastError: UiText? = null
+            withContext(NonCancellable) {
+                if (ids.isNotEmpty()) {
+                    val result = trashRepository.deleteFilesPermanently(ids)
+                    if (result is AppResult.Failure) {
+                        failed += ids.size
+                        lastError = result.error.toUiText()
+                    }
+                }
+                folderIds.forEach { folderId ->
+                    val result = trashRepository.deleteFolderPermanently(folderId)
+                    if (result is AppResult.Failure) {
+                        failed += 1
+                        lastError = result.error.toUiText()
+                    }
+                }
+            }
+            if (failed == 0) {
+                _messages.tryEmit(UiText.Resource(Res.string.trash_deleted_permanently, total))
+            } else {
+                lastError?.let { _messages.tryEmit(it) }
+            }
         }
     }
 }

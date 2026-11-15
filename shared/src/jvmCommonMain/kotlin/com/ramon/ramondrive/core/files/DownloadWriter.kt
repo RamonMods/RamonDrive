@@ -19,4 +19,10 @@ interface DownloadWriter {
     ): PartialDownload?
 
     fun freeBytes(folderPath: String?): Long?
+
+    /**
+     * True only for a copy this app wrote into its own public download folder. Permanent deletion
+     * uses it to avoid touching the user's original files that were merely backed up.
+     */
+    fun owns(path: String): Boolean = false
 }

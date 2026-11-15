@@ -123,6 +123,7 @@ import com.ramon.ramondrive.presentation.components.BlockingProgressDialog
 import com.ramon.ramondrive.presentation.components.BottomBarSnackbarHost
 import com.ramon.ramondrive.presentation.components.CollectionShortcuts
 import com.ramon.ramondrive.presentation.components.ConfirmDialog
+import com.ramon.ramondrive.presentation.components.DeleteChoiceDialog
 import com.ramon.ramondrive.presentation.components.EmptyState
 import com.ramon.ramondrive.presentation.components.FileGridItem
 import com.ramon.ramondrive.presentation.components.SortMenu
@@ -177,6 +178,8 @@ import com.ramon.ramondrive.resources.common_selection_count
 import com.ramon.ramondrive.resources.common_share
 import com.ramon.ramondrive.resources.common_storage_actions
 import com.ramon.ramondrive.resources.common_upload
+import com.ramon.ramondrive.resources.delete_choice_message
+import com.ramon.ramondrive.resources.delete_choice_title
 import com.ramon.ramondrive.resources.files
 import com.ramon.ramondrive.resources.files_add_files
 import com.ramon.ramondrive.resources.files_add_folder
@@ -847,17 +850,16 @@ fun FilesScreen(
         )
     }
     if (confirmTrash) {
-        ConfirmDialog(
-            title = stringResource(
-                Res.string.common_confirm_trash_count_title,
-                state.selectionCount
-            ),
-            message = stringResource(Res.string.common_restore_trash_emptied),
-            confirmLabel = stringResource(Res.string.common_move_trash),
-            destructive = true,
-            onConfirm = {
+        DeleteChoiceDialog(
+            title = stringResource(Res.string.delete_choice_title),
+            message = stringResource(Res.string.delete_choice_message),
+            onMoveToTrash = {
                 confirmTrash = false
                 viewModel.trashSelected()
+            },
+            onDeleteForever = {
+                confirmTrash = false
+                viewModel.deleteSelectedPermanently()
             },
             onDismiss = { confirmTrash = false }
         )

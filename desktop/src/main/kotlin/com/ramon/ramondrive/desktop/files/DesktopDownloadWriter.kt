@@ -45,11 +45,20 @@ class DesktopDownloadWriter(
         target.usableSpace.takeIf { it > 0 }
     }.getOrNull()
 
-    private fun directoryFor(folderPath: String?): File {
+    override fun owns(path: String): Boolean {
+        val root = rootDirectory().absolutePath
+        return path == root || path.startsWith(root + File.separator)
+    }
+
+    private fun rootDirectory(): File {
         val configured = runBlocking { settingsRepository.preferences.first() }.downloadDirectory
         val base = configured?.let(::File)
             ?: File(System.getProperty("user.home"), "Downloads")
-        val root = File(base, ROOT_DIR)
+        return File(base, ROOT_DIR)
+    }
+
+    private fun directoryFor(folderPath: String?): File {
+        val root = rootDirectory()
         return folderPath
             ?.split('/')
             ?.filter { it.isNotBlank() }

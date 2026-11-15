@@ -18,6 +18,7 @@ import androidx.paging.map
 import com.ramon.ramondrive.resources.Res
 import com.ramon.ramondrive.resources.files_cut_count
 import com.ramon.ramondrive.resources.files_queued_for_download
+import com.ramon.ramondrive.resources.trash_deleted_permanently
 import com.ramon.ramondrive.domain.model.DriveFile
 import com.ramon.ramondrive.domain.model.FileCategory
 import com.ramon.ramondrive.domain.model.FileQuerySpec
@@ -43,6 +44,7 @@ import com.ramon.ramondrive.presentation.components.zoomedOut
 import com.ramon.ramondrive.presentation.navigation.Route
 import com.ramon.ramondrive.presentation.preview.PreviewSequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,6 +61,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -333,6 +336,23 @@ class GalleryViewModel(
         val ids = selection.value.toList()
         clearSelection()
         viewModelScope.launch { trashRepository.moveFilesToTrash(ids).reportFailure() }
+    }
+
+    fun deleteSelectedPermanently() {
+        val ids = selection.value.toList()
+        clearSelection()
+        if (ids.isEmpty()) return
+        viewModelScope.launch {
+            val result = withContext(NonCancellable) {
+                trashRepository.deleteFilesPermanently(ids)
+            }
+            when (result) {
+                is AppResult.Success ->
+                    _messages.tryEmit(UiText.Resource(Res.string.trash_deleted_permanently, ids.size))
+
+                is AppResult.Failure -> _messages.tryEmit(result.error.toUiText())
+            }
+        }
     }
 
     fun downloadSelected() {

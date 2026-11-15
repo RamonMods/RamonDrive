@@ -1,6 +1,8 @@
 package com.ramon.ramondrive.data.repository
 
 import com.ramon.ramondrive.core.crypto.SecureFileDeleter
+import com.ramon.ramondrive.core.files.DownloadWriter
+import com.ramon.ramondrive.core.files.LocalCopyDeleter
 import com.ramon.ramondrive.data.local.entity.FileEntity
 import com.ramon.ramondrive.data.local.entity.FolderEntity
 import com.ramon.ramondrive.data.remote.telegram.RemoteFolderEntry
@@ -149,6 +151,8 @@ class CrossDriveFolderTest {
         thumbnailDao = database.thumbnailDao(),
         telegramClient = telegram,
         secureFileDeleter = SecureFileDeleter(),
+        localCopyDeleter = unused<LocalCopyDeleter>(),
+        downloadWriter = unused<DownloadWriter>(),
         publishScheduler = harness.scheduler,
         pendingDeleteDao = database.pendingDeleteDao(),
         filePartDao = database.filePartDao(),

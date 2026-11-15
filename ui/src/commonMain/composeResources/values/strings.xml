@@ -116,6 +116,8 @@
     <string name="common_free_space">Free up space</string>
     <string name="common_grant_permissions">Grant permissions</string>
     <string name="common_move_trash">Move to trash</string>
+    <string name="delete_choice_title">What do you want to do?</string>
+    <string name="delete_choice_message">Move to trash keeps the item on Telegram and lets you restore it later. Delete forever removes it from Telegram, from this app and from the downloaded copy on this device. It cannot be undone.</string>
     <string name="common_name">Name</string>
     <string name="common_no_subfolders">No subfolders here</string>
     <string name="common_one_level">Up one level</string>
@@ -222,6 +224,7 @@
     <string name="onboarding_qr_code_description">Login QR code</string>
     <string name="onboarding_qr_confirm_instead">Confirm on this phone instead</string>
     <string name="onboarding_qr_description">Open Telegram on a device where you are already signed in, then scan this code.</string>
+    <string name="onboarding_qr_failed">Could not generate the QR code. Tap "Use phone number instead" and try again.</string>
     <string name="onboarding_qr_open_failed">Could not open Telegram on this device.</string>
     <string name="onboarding_qr_open_telegram">Confirm in Telegram</string>
     <string name="onboarding_qr_same_device_description">Telegram is installed here. Confirm the login and you are done.</string>

@@ -17,6 +17,7 @@ import com.ramon.ramondrive.resources.preview_nothing_to_remove
 import com.ramon.ramondrive.resources.preview_removed_favorites
 import com.ramon.ramondrive.resources.preview_unarchived
 import com.ramon.ramondrive.resources.preview_unhidden
+import com.ramon.ramondrive.resources.trash_deleted_permanently
 import com.ramon.ramondrive.core.files.DeleteConsentRequest
 import com.ramon.ramondrive.core.common.AppResult
 import com.ramon.ramondrive.domain.model.FileQuerySpec
@@ -33,6 +34,7 @@ import com.ramon.ramondrive.presentation.common.UiText
 import com.ramon.ramondrive.presentation.common.toUiText
 import com.ramon.ramondrive.presentation.navigation.Route
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,6 +51,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PreviewViewModel(
@@ -318,6 +321,27 @@ class PreviewViewModel(
                 _uiState.update { it.copy(closed = true) }
             } else {
                 _uiState.update { it.copy(files = remaining) }
+            }
+        }
+    }
+
+    fun deleteForever(file: DriveFile) {
+        viewModelScope.launch {
+            val result = withContext(NonCancellable) {
+                trashRepository.deleteFilesPermanently(listOf(file.id))
+            }
+            when (result) {
+                is AppResult.Success -> {
+                    _messages.tryEmit(UiText.Resource(Res.string.trash_deleted_permanently, 1))
+                    val remaining = _uiState.value.files.filterNot { it.id == file.id }
+                    if (remaining.isEmpty()) {
+                        _uiState.update { it.copy(closed = true) }
+                    } else {
+                        _uiState.update { it.copy(files = remaining) }
+                    }
+                }
+
+                is AppResult.Failure -> _messages.tryEmit(result.error.toUiText())
             }
         }
     }

@@ -47,6 +47,7 @@ import com.ramon.ramondrive.domain.model.FileCategory
 import com.ramon.ramondrive.presentation.common.AppBackHandler
 import com.ramon.ramondrive.presentation.components.ActionMenu
 import com.ramon.ramondrive.presentation.components.CollectionShortcuts
+import com.ramon.ramondrive.presentation.components.DeleteChoiceDialog
 import com.ramon.ramondrive.presentation.components.EmptyState
 import com.ramon.ramondrive.presentation.components.FileListItem
 import com.ramon.ramondrive.presentation.components.FolderRow
@@ -76,6 +77,8 @@ import com.ramon.ramondrive.resources.common_make_available_offline
 import com.ramon.ramondrive.resources.common_move_trash
 import com.ramon.ramondrive.resources.common_remove_from_offline
 import com.ramon.ramondrive.resources.common_select_all
+import com.ramon.ramondrive.resources.delete_choice_message
+import com.ramon.ramondrive.resources.delete_choice_title
 import com.ramon.ramondrive.resources.search_open_folder
 import com.ramon.ramondrive.resources.search_section_files
 import com.ramon.ramondrive.resources.search_section_folders
@@ -95,6 +98,7 @@ fun SearchScreen(
     val listState = rememberLazyListState()
     val lifted by rememberToolbarLift(listState)
     var showSelectionMenu by remember { mutableStateOf(false) }
+    var confirmTrash by remember { mutableStateOf(false) }
 
     AppBackHandler(enabled = state.selectionMode) { viewModel.clearSelection() }
 
@@ -113,7 +117,7 @@ fun SearchScreen(
         onSelectAll = viewModel::selectAll,
         onDelete = { index ->
             if (!state.selectionMode) fileIdAt(index)?.let(viewModel::toggleSelection)
-            viewModel.trashSelected()
+            confirmTrash = true
         },
         onBack = onBack,
         onClear = if (state.selectionMode) viewModel::clearSelection else null
@@ -127,6 +131,7 @@ fun SearchScreen(
                     lifted = lifted,
                     menuExpanded = showSelectionMenu,
                     onMenuExpandedChange = { showSelectionMenu = it },
+                    onRequestTrash = { confirmTrash = true },
                     viewModel = viewModel,
                     onOpenFolder = onOpenFolder
                 )
@@ -298,6 +303,22 @@ fun SearchScreen(
             }
         }
     }
+
+    if (confirmTrash) {
+        DeleteChoiceDialog(
+            title = stringResource(Res.string.delete_choice_title),
+            message = stringResource(Res.string.delete_choice_message),
+            onMoveToTrash = {
+                confirmTrash = false
+                viewModel.trashSelected()
+            },
+            onDeleteForever = {
+                confirmTrash = false
+                viewModel.deleteSelectedPermanently()
+            },
+            onDismiss = { confirmTrash = false }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -307,6 +328,7 @@ private fun SearchSelectionBar(
     lifted: Boolean,
     menuExpanded: Boolean,
     onMenuExpandedChange: (Boolean) -> Unit,
+    onRequestTrash: () -> Unit,
     viewModel: SearchViewModel,
     onOpenFolder: (String, String?) -> Unit
 ) {
@@ -354,7 +376,7 @@ private fun SearchSelectionBar(
             MenuAction(
                 label = stringResource(Res.string.common_move_trash),
                 icon = Icons.Filled.DeleteOutline
-            ) { viewModel.trashSelected() }
+            ) { onRequestTrash() }
         )
     }
 

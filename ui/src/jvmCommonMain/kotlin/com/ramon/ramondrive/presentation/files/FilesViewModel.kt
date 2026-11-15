@@ -59,6 +59,9 @@ import com.ramon.ramondrive.resources.message_moved_count
 import com.ramon.ramondrive.resources.message_moved_to_trash_count
 import com.ramon.ramondrive.resources.message_nothing_to_download
 import com.ramon.ramondrive.resources.note_not_editable
+import com.ramon.ramondrive.resources.trash_delete_partial
+import com.ramon.ramondrive.resources.trash_deleted_permanently
+import com.ramon.ramondrive.resources.trash_deleting_items
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -390,6 +393,42 @@ class FilesViewModel(
             }
             _working.value = null
             _messages.tryEmit(UiText.Resource(Res.string.message_moved_to_trash_count, total))
+        }
+    }
+
+    fun deleteSelectedPermanently() {
+        val ids = selection.value.toList()
+        val folderIds = folderSelection.value.toList()
+        val total = ids.size + folderIds.size
+        clearSelection()
+        _working.value = UiText.PluralResource(Res.plurals.trash_deleting_items, total, total)
+        viewModelScope.launch {
+            var failed = 0
+            var lastError: UiText? = null
+            withContext(NonCancellable) {
+                if (ids.isNotEmpty()) {
+                    val result = trashRepository.deleteFilesPermanently(ids)
+                    if (result is AppResult.Failure) {
+                        failed += ids.size
+                        lastError = result.error.toUiText()
+                    }
+                }
+                folderIds.forEach { folderId ->
+                    val result = trashRepository.deleteFolderPermanently(folderId)
+                    if (result is AppResult.Failure) {
+                        failed += 1
+                        lastError = result.error.toUiText()
+                    }
+                }
+            }
+            _working.value = null
+            _messages.tryEmit(
+                if (failed == 0) {
+                    UiText.Resource(Res.string.trash_deleted_permanently, total)
+                } else {
+                    lastError ?: UiText.Resource(Res.string.trash_delete_partial, failed, total)
+                }
+            )
         }
     }
 

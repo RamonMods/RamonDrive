@@ -399,6 +399,14 @@ interface FileDao {
     )
     suspend fun filesInFolder(folderId: String, chatId: Long?): List<FileEntity>
 
+    /** Every file owned by the folder, live or already trashed. Used by permanent deletion. */
+    @Query(
+        """SELECT * FROM files
+           WHERE (folderId = :folderId OR preTrashFolderId = :folderId)
+             AND (chatId IS :chatId OR chatId IS NULL)"""
+    )
+    suspend fun allFilesInFolder(folderId: String, chatId: Long?): List<FileEntity>
+
     @Query(
         """SELECT files.* FROM files
            JOIN folders ON folders.id = COALESCE(files.folderId, files.preTrashFolderId)

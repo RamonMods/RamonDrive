@@ -110,7 +110,7 @@ import com.ramon.ramondrive.presentation.common.add
 import com.ramon.ramondrive.presentation.common.normalizeUrl
 import com.ramon.ramondrive.presentation.common.scaledBy
 import com.ramon.ramondrive.presentation.common.soleUrlOf
-import com.ramon.ramondrive.presentation.components.ConfirmDialog
+import com.ramon.ramondrive.presentation.components.DeleteChoiceDialog
 import com.ramon.ramondrive.presentation.components.EmptyState
 import com.ramon.ramondrive.presentation.components.ErrorState
 import com.ramon.ramondrive.presentation.components.FileInfoSheet
@@ -128,6 +128,8 @@ import com.ramon.ramondrive.resources.common_move_trash
 import com.ramon.ramondrive.resources.common_rename
 import com.ramon.ramondrive.resources.common_rename_file
 import com.ramon.ramondrive.resources.common_upload
+import com.ramon.ramondrive.resources.delete_choice_message
+import com.ramon.ramondrive.resources.delete_choice_title
 import com.ramon.ramondrive.resources.file_count
 import com.ramon.ramondrive.resources.files_hide
 import com.ramon.ramondrive.resources.files_unhide
@@ -140,11 +142,9 @@ import com.ramon.ramondrive.resources.preview_archive_format_title
 import com.ramon.ramondrive.resources.preview_archive_packed_summary
 import com.ramon.ramondrive.resources.preview_archive_packed_summary_saved
 import com.ramon.ramondrive.resources.preview_chevron
-import com.ramon.ramondrive.resources.preview_confirm_trash_file_message
 import com.ramon.ramondrive.resources.preview_download_view
 import com.ramon.ramondrive.resources.preview_extraction_supported_yet_download
 import com.ramon.ramondrive.resources.preview_file_info
-import com.ramon.ramondrive.resources.preview_move_to_trash
 import com.ramon.ramondrive.resources.preview_no_preview
 import com.ramon.ramondrive.resources.preview_preparing
 import com.ramon.ramondrive.resources.preview_progress_bytes
@@ -466,13 +466,15 @@ fun PreviewScreen(
         )
     }
     deleteTarget?.let { file ->
-        ConfirmDialog(
-            title = stringResource(Res.string.preview_move_to_trash),
-            message = stringResource(Res.string.preview_confirm_trash_file_message, file.name),
-            confirmLabel = stringResource(Res.string.common_move_trash),
-            destructive = true,
-            onConfirm = {
+        DeleteChoiceDialog(
+            title = stringResource(Res.string.delete_choice_title),
+            message = stringResource(Res.string.delete_choice_message),
+            onMoveToTrash = {
                 viewModel.moveToTrash(file)
+                deleteTarget = null
+            },
+            onDeleteForever = {
+                viewModel.deleteForever(file)
                 deleteTarget = null
             },
             onDismiss = { deleteTarget = null }

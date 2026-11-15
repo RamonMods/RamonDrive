@@ -148,6 +148,15 @@ class SearchViewModel(
         }
     }
 
+    fun deleteSelectedPermanently() {
+        val ids = selection.value.toList()
+        clearSelection()
+        if (ids.isEmpty()) return
+        viewModelScope.launch {
+            withContext(NonCancellable) { trashRepository.deleteFilesPermanently(ids) }
+        }
+    }
+
     fun setQuery(value: String) = query.update { value }
 
     fun setCategory(category: FileCategory?) = filters.update { it.copy(category = category) }

@@ -179,12 +179,10 @@ import com.ramon.ramondrive.resources.onboarding_phone_number
 import com.ramon.ramondrive.resources.onboarding_phone_number_telegram_account
 import com.ramon.ramondrive.resources.onboarding_pick_drive_desc
 import com.ramon.ramondrive.resources.onboarding_qr_code_description
-import com.ramon.ramondrive.resources.onboarding_qr_confirm_instead
 import com.ramon.ramondrive.resources.onboarding_qr_description
 import com.ramon.ramondrive.resources.onboarding_qr_open_failed
 import com.ramon.ramondrive.resources.onboarding_qr_open_telegram
 import com.ramon.ramondrive.resources.onboarding_qr_same_device_description
-import com.ramon.ramondrive.resources.onboarding_qr_scan_instead
 import com.ramon.ramondrive.resources.onboarding_qr_sign_in
 import com.ramon.ramondrive.resources.onboarding_qr_step_1
 import com.ramon.ramondrive.resources.onboarding_qr_step_2
@@ -804,45 +802,47 @@ private fun QrStep(
     // The QR payload is a tg: link, so Telegram on this device can confirm directly.
     val telegramLinkOpener = LocalTelegramLinkOpener.current
     val canConfirmHere = telegramLinkOpener.canOpenTelegram
-    // One route at a time: both at once reads like two required steps.
-    var scanning by rememberSaveable(canConfirmHere) { mutableStateOf(!canConfirmHere) }
 
     OnboardingPage(
         icon = Icons.Filled.QrCode2,
         title = stringResource(Res.string.onboarding_qr_title),
-        description = if (scanning) {
-            stringResource(Res.string.onboarding_qr_description)
-        } else {
-            stringResource(Res.string.onboarding_qr_same_device_description)
-        }
+        description = stringResource(Res.string.onboarding_qr_description)
     ) {
-        if (scanning) {
-            Surface(
-                color = QR_SURFACE,
-                shape = MaterialTheme.shapes.extraLarge,
-                modifier = Modifier
-                    .fillMaxWidth(QR_WIDTH_FRACTION)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(QR_PADDING)) {
-                    if (link == null) {
-                        CircularProgressIndicator(modifier = Modifier.padding(QR_PADDING))
-                    } else {
-                        QrCode(
-                            content = link,
-                            contentDescription = stringResource(
-                                Res.string.onboarding_qr_code_description
-                            ),
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
+        // Always show the code: hiding it behind a same-device shortcut made it look broken.
+        Surface(
+            color = QR_SURFACE,
+            shape = MaterialTheme.shapes.extraLarge,
+            modifier = Modifier
+                .fillMaxWidth(QR_WIDTH_FRACTION)
+                .align(Alignment.CenterHorizontally)
+        ) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(QR_PADDING)) {
+                if (link == null) {
+                    CircularProgressIndicator(modifier = Modifier.padding(QR_PADDING))
+                } else {
+                    QrCode(
+                        content = link,
+                        contentDescription = stringResource(
+                            Res.string.onboarding_qr_code_description
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
-            Spacer(Modifier.height(20.dp))
-            QrInstruction(1, stringResource(Res.string.onboarding_qr_step_1))
-            QrInstruction(2, stringResource(Res.string.onboarding_qr_step_2))
-            QrInstruction(3, stringResource(Res.string.onboarding_qr_step_3))
-        } else {
+        }
+        Spacer(Modifier.height(20.dp))
+        QrInstruction(1, stringResource(Res.string.onboarding_qr_step_1))
+        QrInstruction(2, stringResource(Res.string.onboarding_qr_step_2))
+        QrInstruction(3, stringResource(Res.string.onboarding_qr_step_3))
+
+        if (canConfirmHere) {
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = stringResource(Res.string.onboarding_qr_same_device_description),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.height(8.dp))
             BigButton(
                 label = stringResource(Res.string.onboarding_qr_open_telegram),
                 enabled = !working && link != null,
@@ -887,26 +887,8 @@ private fun QrStep(
             Spacer(Modifier.height(8.dp))
         }
 
-        if (canConfirmHere) {
-            TextButton(
-                onClick = { scanning = !scanning },
-                enabled = !working,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text(
-                    stringResource(
-                        if (scanning) {
-                            Res.string.onboarding_qr_confirm_instead
-                        } else {
-                            Res.string.onboarding_qr_scan_instead
-                        }
-                    )
-                )
-            }
-        }
         TextButton(
             onClick = onCancel,
-            enabled = !working,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) { Text(stringResource(Res.string.onboarding_qr_use_phone)) }
     }

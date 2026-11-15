@@ -53,6 +53,7 @@ class MediaStoreLocalCopyDeleter(
     }
 
     private fun mediaUriFor(path: String): Uri? = runCatching {
+        if (path.startsWith("content://")) return@runCatching Uri.parse(path)
         val collection = MediaStore.Files.getContentUri(externalVolume())
         context.contentResolver.query(
             collection,

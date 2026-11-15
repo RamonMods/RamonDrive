@@ -116,6 +116,8 @@
     <string name="common_free_space">Liberar espaço</string>
     <string name="common_grant_permissions">Conceder permissões</string>
     <string name="common_move_trash">Mover para a lixeira</string>
+    <string name="delete_choice_title">O que você quer fazer?</string>
+    <string name="delete_choice_message">Mover para a lixeira mantém o item no Telegram e permite restaurar depois. Excluir permanentemente apaga do Telegram, deste aplicativo e da cópia baixada neste celular. Não tem como desfazer.</string>
     <string name="common_name">Nome</string>
     <string name="common_no_subfolders">Nenhuma subpasta aqui</string>
     <string name="common_one_level">Subir um nível</string>
@@ -222,6 +224,7 @@
     <string name="onboarding_qr_code_description">Código QR de login</string>
     <string name="onboarding_qr_confirm_instead">Confirmar neste celular</string>
     <string name="onboarding_qr_description">Abra o Telegram em um dispositivo onde você já esteja conectado e escaneie este código.</string>
+    <string name="onboarding_qr_failed">Não foi possível gerar o QR code. Toque em "Usar número de telefone" e tente de novo.</string>
     <string name="onboarding_qr_open_failed">Não foi possível abrir o Telegram neste dispositivo.</string>
     <string name="onboarding_qr_open_telegram">Confirmar no Telegram</string>
     <string name="onboarding_qr_same_device_description">O Telegram está instalado aqui. Confirme o login para concluir.</string>

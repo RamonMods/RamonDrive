@@ -58,6 +58,15 @@ class MediaStoreDownloadWriter(
         StatFs(Environment.getExternalStorageDirectory().path).availableBytes
     }.getOrNull()
 
+    override fun owns(path: String): Boolean {
+        if (path.startsWith("content://")) return true
+        val root = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+            FOLDER_NAME
+        ).absolutePath
+        return path == root || path.startsWith(root + File.separator)
+    }
+
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun writeThroughMediaStore(
         fileName: String,

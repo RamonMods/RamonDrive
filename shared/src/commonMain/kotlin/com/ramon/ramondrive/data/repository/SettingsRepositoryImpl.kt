@@ -101,7 +101,9 @@ class SettingsRepositoryImpl(
             keyBackupCreated = this[PreferenceKeys.KEY_BACKUP_CREATED]
                 ?: defaults.keyBackupCreated,
             theme = enumOrDefault(this[PreferenceKeys.THEME], defaults.theme),
-            language = AppLanguage.fromCode(this[PreferenceKeys.LANGUAGE]),
+            language = this[PreferenceKeys.LANGUAGE]
+                ?.let(AppLanguage::fromCode)
+                ?: defaults.language,
             dynamicColor = this[PreferenceKeys.DYNAMIC_COLOR] ?: defaults.dynamicColor,
             viewMode = enumOrDefault(this[PreferenceKeys.VIEW_MODE], defaults.viewMode),
             galleryViewMode = enumOrDefault(
