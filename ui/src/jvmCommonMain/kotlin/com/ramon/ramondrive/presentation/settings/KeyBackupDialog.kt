@@ -32,7 +32,9 @@ import com.ramon.ramondrive.resources.settings_back_encryption_key
 import com.ramon.ramondrive.resources.settings_enter_passphrase_used_backing
 import com.ramon.ramondrive.resources.settings_forgot_show_hint
 import com.ramon.ramondrive.resources.settings_hint_optional
+import com.ramon.ramondrive.resources.settings_key_hint_saved
 import com.ramon.ramondrive.resources.settings_no_key_backup_found
+import com.ramon.ramondrive.resources.settings_no_key_hint_saved
 import com.ramon.ramondrive.resources.settings_passphrase
 import com.ramon.ramondrive.resources.settings_passphrase_min_length
 import com.ramon.ramondrive.resources.settings_passphrases_do_not_match

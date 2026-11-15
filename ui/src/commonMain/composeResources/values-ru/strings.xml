@@ -780,6 +780,9 @@
 
     <!-- Settings: advanced -->
     <string name="settings_debug_logging">Журнал отладки</string>
+    <string name="settings_share_debug_log">Поделиться журналом</string>
+    <string name="settings_share_debug_log_subtitle">Отправьте журнал отладки, чтобы приложить его к отчёту об ошибке</string>
+    <string name="settings_debug_log_empty">Пока ничего не записано. Воспроизведите проблему, затем поделитесь журналом.</string>
     <string name="settings_link_previews">Предпросмотр ссылок</string>
     <string name="settings_link_previews_subtitle">Telegram загружает заголовок и картинку для сохраненных ссылок</string>
     <string name="settings_parallel_transfers">Параллельные передачи</string>

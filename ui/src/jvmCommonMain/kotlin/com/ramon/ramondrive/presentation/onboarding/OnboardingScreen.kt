@@ -160,6 +160,7 @@ import com.ramon.ramondrive.resources.onboarding_enter_code
 import com.ramon.ramondrive.resources.onboarding_enter_password
 import com.ramon.ramondrive.resources.onboarding_files_access_covers_documents
 import com.ramon.ramondrive.resources.onboarding_files_live_own_private
+import com.ramon.ramondrive.resources.onboarding_finish_setup
 import com.ramon.ramondrive.resources.onboarding_get_api_keys
 import com.ramon.ramondrive.resources.onboarding_get_started
 import com.ramon.ramondrive.resources.onboarding_got
@@ -173,6 +174,7 @@ import com.ramon.ramondrive.resources.onboarding_one_time_setup_keys
 import com.ramon.ramondrive.resources.onboarding_open_dev_page
 import com.ramon.ramondrive.resources.onboarding_opening
 import com.ramon.ramondrive.resources.onboarding_password
+import com.ramon.ramondrive.resources.onboarding_password_with_hint
 import com.ramon.ramondrive.resources.onboarding_phone_number
 import com.ramon.ramondrive.resources.onboarding_phone_number_telegram_account
 import com.ramon.ramondrive.resources.onboarding_pick_drive_desc
@@ -201,6 +203,7 @@ import com.ramon.ramondrive.resources.onboarding_single_drive_desc
 import com.ramon.ramondrive.resources.onboarding_step
 import com.ramon.ramondrive.resources.onboarding_step_counter
 import com.ramon.ramondrive.resources.onboarding_storage_access
+import com.ramon.ramondrive.resources.onboarding_syncing_drive
 import com.ramon.ramondrive.resources.onboarding_ramondrive_needs_media_files
 import com.ramon.ramondrive.resources.onboarding_telegram_blocked
 import com.ramon.ramondrive.resources.onboarding_toggle_auto_backup

@@ -41,6 +41,17 @@
         <item quantity="one">%1$d file terenkripsi dilewati. Pulihkan kunci Anda untuk mengindeksnya.</item>
         <item quantity="other">%1$d file terenkripsi dilewati. Pulihkan kunci Anda untuk mengindeksnya.</item>
     </plurals>
+    <plurals name="home_encrypted_message">
+        <item quantity="one">%1$d file di drive ini terenkripsi. Pulihkan kunci enkripsi Anda untuk melihatnya.</item>
+        <item quantity="other">%1$d file di drive ini terenkripsi. Pulihkan kunci enkripsi Anda untuk melihatnya.</item>
+    </plurals>
+    <plurals name="channels_encrypted_files">
+        <item quantity="one">%1$d file terenkripsi</item>
+        <item quantity="other">%1$d file terenkripsi</item>
+    </plurals>
+    <string name="home_encrypted_title">File terenkripsi ditemukan</string>
+    <string name="home_encrypted_open_settings">Buka pengaturan</string>
+    <string name="home_encrypted_later">Nanti</string>
     <plurals name="home_saving_changes_left">
         <item quantity="one">Tersisa %1$d file</item>
         <item quantity="other">Tersisa %1$d file</item>

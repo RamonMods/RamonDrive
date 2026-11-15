@@ -738,6 +738,9 @@
 
     <!-- Settings: advanced -->
     <string name="settings_debug_logging">调试日志</string>
+    <string name="settings_share_debug_log">分享日志</string>
+    <string name="settings_share_debug_log_subtitle">发送调试日志以附加到错误报告</string>
+    <string name="settings_debug_log_empty">尚无日志记录。请复现问题，然后分享日志。</string>
     <string name="settings_link_previews">链接预览</string>
     <string name="settings_link_previews_subtitle">Telegram 会获取已保存链接的标题和图片</string>
     <string name="settings_parallel_transfers">并行传输</string>
