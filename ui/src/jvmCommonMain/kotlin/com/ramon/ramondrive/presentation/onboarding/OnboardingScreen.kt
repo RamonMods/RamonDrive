@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -813,6 +814,7 @@ private fun QrStep(
             color = QR_SURFACE,
             shape = MaterialTheme.shapes.extraLarge,
             modifier = Modifier
+                .widthIn(max = QR_MAX_WIDTH)
                 .fillMaxWidth(QR_WIDTH_FRACTION)
                 .align(Alignment.CenterHorizontally)
         ) {
@@ -1564,6 +1566,7 @@ private val SPINNER_STROKE = 2.dp
 
 // Scanners expect dark modules on light.
 private val QR_SURFACE = Color.White
+private val QR_MAX_WIDTH = 360.dp
 private const val QR_WIDTH_FRACTION = 0.8f
 private val QR_PADDING = 16.dp
 private val QR_STEP_BADGE = 28.dp
