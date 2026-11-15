@@ -18,6 +18,7 @@ import com.ramon.ramondrive.presentation.settings.ExclusionsViewModel
 import com.ramon.ramondrive.presentation.settings.SettingsViewModel
 import com.ramon.ramondrive.presentation.transfers.TransfersViewModel
 import com.ramon.ramondrive.presentation.trash.TrashViewModel
+import com.ramon.ramondrive.presentation.update.UpdateController
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -25,6 +26,7 @@ import org.koin.dsl.module
 val sharedUiModule = module {
     singleOf(::PreviewContentResolver)
     singleOf(::FileClipboard)
+    singleOf(::UpdateController)
     viewModelOf(::AppViewModel)
     viewModelOf(::PreviewViewModel)
     viewModelOf(::ChannelsViewModel)

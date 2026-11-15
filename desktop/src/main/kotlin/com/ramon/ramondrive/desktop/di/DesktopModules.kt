@@ -92,6 +92,8 @@ import com.ramon.ramondrive.domain.usecase.useCaseModule
 import com.ramon.ramondrive.presentation.di.sharedUiModule
 import com.ramon.ramondrive.presentation.platform.PlatformCapabilities
 import com.ramon.ramondrive.presentation.platform.StandardFolderPaths
+import com.ramon.ramondrive.presentation.platform.NoopUpdateInstaller
+import com.ramon.ramondrive.presentation.platform.UpdateInstaller
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import okio.Path.Companion.toOkioPath
@@ -126,6 +128,7 @@ val desktopModule = module {
     singleOf(::ProxyProbe)
     singleOf(::AppLockManager)
     single { UpdateChecker(BuildInfo.VERSION) }
+    single<UpdateInstaller> { NoopUpdateInstaller }
     singleOf(::DesktopPermissionChecker) bind PermissionChecker::class
     singleOf(::DesktopStandardFolderPaths) bind StandardFolderPaths::class
     singleOf(::DesktopPlatformCapabilities) bind PlatformCapabilities::class

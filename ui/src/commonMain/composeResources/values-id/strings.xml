@@ -923,6 +923,13 @@
     <string name="about_update_later">Nanti saja</string>
     <string name="about_update_ready">Versi %1$s siap diunduh</string>
     <string name="about_update_title">Perbarui ke %1$s</string>
+    <string name="update_available">Pembaruan tersedia</string>
+    <string name="update_install_now">Perbarui sekarang</string>
+    <string name="update_downloading">Mengunduh…</string>
+    <string name="update_downloading_percent">Mengunduh… %1$d%%</string>
+    <string name="update_permission_needed">Izinkan RamonDrive memasang aplikasi tak dikenal, lalu ketuk Perbarui sekarang lagi.</string>
+    <string name="update_failed">Unduhan gagal. Coba lagi atau buka halaman rilis.</string>
+    <string name="update_open_page">Buka halaman rilis</string>
     <string name="about_version">Versi %1$s</string>
 
     <!-- Snackbar messages -->

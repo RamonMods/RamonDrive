@@ -945,6 +945,13 @@
     <string name="about_update_later">Позже</string>
     <string name="about_update_ready">Версия %1$s готова к скачиванию</string>
     <string name="about_update_title">Обновление до %1$s</string>
+    <string name="update_available">Доступно обновление</string>
+    <string name="update_install_now">Обновить сейчас</string>
+    <string name="update_downloading">Загрузка…</string>
+    <string name="update_downloading_percent">Загрузка… %1$d%%</string>
+    <string name="update_permission_needed">Разрешите RamonDrive установку неизвестных приложений и снова нажмите «Обновить сейчас».</string>
+    <string name="update_failed">Не удалось скачать обновление. Повторите попытку или откройте страницу версии.</string>
+    <string name="update_open_page">Открыть страницу версии</string>
     <string name="about_version">Версия %1$s</string>
 
     <!-- Snackbar messages -->

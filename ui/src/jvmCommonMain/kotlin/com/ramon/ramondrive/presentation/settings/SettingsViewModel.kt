@@ -11,7 +11,10 @@ import com.ramon.ramondrive.core.telegram.TelegramClient
 import com.ramon.ramondrive.core.telegram.TelegramUser
 import com.ramon.ramondrive.core.transfer.MaintenanceScheduler
 import com.ramon.ramondrive.core.transfer.TransferScheduler
+import com.ramon.ramondrive.core.update.AppRelease
 import com.ramon.ramondrive.core.update.UpdateChecker
+import com.ramon.ramondrive.presentation.update.UpdateController
+import com.ramon.ramondrive.presentation.update.UpdateInstallState
 import com.ramon.ramondrive.data.repository.LocalDataWiper
 import com.ramon.ramondrive.domain.model.BackupTrigger
 import com.ramon.ramondrive.domain.model.UserPreferences
@@ -75,6 +78,7 @@ class SettingsViewModel(
     private val transferScheduler: TransferScheduler,
     val permissionChecker: PermissionChecker,
     private val updateChecker: UpdateChecker,
+    private val updateController: UpdateController,
     private val debugLogRecorder: DebugLogRecorder
 ) : ViewModel() {
 
@@ -82,6 +86,9 @@ class SettingsViewModel(
 
     private val _updateState = MutableStateFlow<UpdateState>(UpdateState.Idle)
     val updateState: StateFlow<UpdateState> = _updateState.asStateFlow()
+
+    val updateInstallState: StateFlow<UpdateInstallState> = updateController.state
+    val canInstallInApp: Boolean get() = updateController.canInstallInApp
 
     private val _messages = MutableSharedFlow<UiText>(extraBufferCapacity = 8)
     val messages = _messages.asSharedFlow()
@@ -341,6 +348,12 @@ class SettingsViewModel(
     fun dismissUpdate() {
         _updateState.value = UpdateState.Idle
     }
+
+    fun installUpdate(release: AppRelease) {
+        updateController.install(viewModelScope, release)
+    }
+
+    fun resetUpdateInstall() = updateController.reset()
 
     fun shareDebugLog() {
         viewModelScope.launch {

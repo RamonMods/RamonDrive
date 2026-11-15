@@ -27,6 +27,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import com.ramon.ramondrive.core.update.AppRelease
 import com.ramon.ramondrive.core.update.UpdateChecker
+import com.ramon.ramondrive.presentation.update.UpdateController
+import com.ramon.ramondrive.presentation.update.UpdateInstallState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.ramon.ramondrive.core.common.AppResult
@@ -42,7 +44,8 @@ class AppViewModel(
     private val channelRepository: ChannelRepository,
     private val appLockManager: AppLockManager,
     private val localDataWiper: LocalDataWiper,
-    private val updateChecker: UpdateChecker
+    private val updateChecker: UpdateChecker,
+    private val updateController: UpdateController
 ) : ViewModel() {
 
     private val _sessionBroken = MutableStateFlow(false)
@@ -53,6 +56,14 @@ class AppViewModel(
 
     private val _pendingUpdate = MutableStateFlow<AppRelease?>(null)
     val pendingUpdate: StateFlow<AppRelease?> = _pendingUpdate.asStateFlow()
+
+    /** Stays set after the dialog is dismissed, so the update badge remains reachable. */
+    private val _availableUpdate = MutableStateFlow<AppRelease?>(null)
+    val availableUpdate: StateFlow<AppRelease?> = _availableUpdate.asStateFlow()
+
+    val updateInstallState: StateFlow<UpdateInstallState> = updateController.state
+
+    val canInstallInApp: Boolean get() = updateController.canInstallInApp
 
     @Volatile
     private var driveReady = false
@@ -152,8 +163,21 @@ class AppViewModel(
             settingsRepository.update { it.copy(lastUpdateCheckAt = System.currentTimeMillis()) }
             val release = updateChecker.newerRelease()
             if (!force && release?.version == prefs.skippedUpdateVersion) return@launch
+            _availableUpdate.value = release
             _pendingUpdate.value = release
         }
+    }
+
+    fun showUpdate() {
+        _pendingUpdate.value = _availableUpdate.value
+    }
+
+    fun installUpdate(release: AppRelease) {
+        updateController.install(viewModelScope, release)
+    }
+
+    fun resetUpdateInstall() {
+        updateController.reset()
     }
 
     fun resetSession() {
@@ -176,6 +200,7 @@ class AppViewModel(
 
     fun dismissUpdate() {
         _pendingUpdate.value = null
+        updateController.reset()
     }
 
     fun unlock() = appLockManager.unlock()

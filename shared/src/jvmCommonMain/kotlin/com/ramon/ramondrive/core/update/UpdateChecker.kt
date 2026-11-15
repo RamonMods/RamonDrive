@@ -12,7 +12,9 @@ import java.net.URL
  * page.
  */
 class UpdateChecker(
-    private val currentVersion: String
+    private val currentVersion: String,
+    /** Device ABI, so the release can point straight at the matching APK. */
+    private val abi: String? = null
 ) {
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -31,11 +33,30 @@ class UpdateChecker(
         val latest = release.tag.removePrefix("v").trim()
         if (!isNewer(latest, currentVersion)) return@withContext null
 
+        val asset = release.apkAsset(abi)
         AppRelease(
             version = latest,
             notes = release.body.orEmpty().trim(),
-            pageUrl = release.pageUrl
+            pageUrl = release.pageUrl,
+            downloadUrl = asset?.downloadUrl,
+            assetName = asset?.name
         )
+    }
+
+    private fun GitHubRelease.apkAsset(abi: String?): GitHubAsset? {
+        val apks = assets.filter { it.name.endsWith(".apk", ignoreCase = true) }
+        if (apks.isEmpty()) return null
+
+        val wanted = abi?.lowercase()?.trim()?.takeIf { it.isNotEmpty() }
+        if (wanted != null) {
+            apks.firstOrNull { it.name.lowercase().contains("-$wanted-") }?.let { return it }
+            apks.firstOrNull { it.name.lowercase().contains(wanted) }?.let { return it }
+            // A 64-bit phone still runs the 32-bit build, which beats the universal one.
+            if (wanted == "arm64-v8a") {
+                apks.firstOrNull { it.name.lowercase().contains("armeabi-v7a") }?.let { return it }
+            }
+        }
+        return apks.firstOrNull { it.name.contains("universal", ignoreCase = true) } ?: apks.first()
     }
 
     private fun fetchLatest(): String {

@@ -917,6 +917,13 @@
     <string name="about_update_later">Más tarde</string>
     <string name="about_update_ready">La versión %1$s está lista para descargar</string>
     <string name="about_update_title">Actualizar a %1$s</string>
+    <string name="update_available">Actualización disponible</string>
+    <string name="update_install_now">Actualizar ahora</string>
+    <string name="update_downloading">Descargando…</string>
+    <string name="update_downloading_percent">Descargando… %1$d%%</string>
+    <string name="update_permission_needed">Permite instalar apps desconocidas para RamonDrive y vuelve a tocar Actualizar ahora.</string>
+    <string name="update_failed">La descarga falló. Inténtalo de nuevo o abre la página de la versión.</string>
+    <string name="update_open_page">Abrir página de la versión</string>
     <string name="about_version">Versión %1$s</string>
 
     <!-- Snackbar messages -->

@@ -903,6 +903,13 @@
     <string name="about_update_later">稍后</string>
     <string name="about_update_ready">版本 %1$s 可供下载</string>
     <string name="about_update_title">更新到 %1$s</string>
+    <string name="update_available">有可用更新</string>
+    <string name="update_install_now">立即更新</string>
+    <string name="update_downloading">正在下载…</string>
+    <string name="update_downloading_percent">正在下载… %1$d%%</string>
+    <string name="update_permission_needed">请允许 RamonDrive 安装未知应用，然后再次点击“立即更新”。</string>
+    <string name="update_failed">下载失败。请重试或打开版本页面。</string>
+    <string name="update_open_page">打开发布页面</string>
     <string name="about_version">版本 %1$s</string>
 
     <!-- Snackbar messages -->

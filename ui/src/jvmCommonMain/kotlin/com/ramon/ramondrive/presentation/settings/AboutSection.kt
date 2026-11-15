@@ -52,6 +52,7 @@ import com.ramon.ramondrive.presentation.components.UpdateDialog
 fun AboutSection(state: SettingsUiState, viewModel: SettingsViewModel) {
     val urlOpener = LocalUrlOpener.current
     val updateState by viewModel.updateState.collectAsStateWithLifecycle()
+    val installState by viewModel.updateInstallState.collectAsStateWithLifecycle()
     val checking = updateState is UpdateState.Checking
 
     Column(
@@ -144,7 +145,10 @@ fun AboutSection(state: SettingsUiState, viewModel: SettingsViewModel) {
             currentVersion = LocalAppVersion.current,
             onOpenUrl = urlOpener::open,
             release = available.release,
-            onDownload = {
+            canInstall = viewModel.canInstallInApp,
+            installState = installState,
+            onInstall = { viewModel.installUpdate(available.release) },
+            onOpenPage = {
                 viewModel.dismissUpdate()
                 urlOpener.open(available.release.pageUrl)
             },

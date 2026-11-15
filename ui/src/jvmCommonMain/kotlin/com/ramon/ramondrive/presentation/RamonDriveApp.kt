@@ -80,6 +80,7 @@ import com.ramon.ramondrive.domain.model.AppTheme
 import com.ramon.ramondrive.presentation.applock.LockScreen
 import com.ramon.ramondrive.presentation.components.LocalCompactLayout
 import com.ramon.ramondrive.presentation.components.SessionBrokenDialog
+import com.ramon.ramondrive.presentation.components.UpdateBadge
 import com.ramon.ramondrive.presentation.components.UpdateDialog
 import com.ramon.ramondrive.presentation.navigation.AppNavHost
 import com.ramon.ramondrive.presentation.navigation.BottomBarHeight
@@ -88,6 +89,7 @@ import com.ramon.ramondrive.presentation.navigation.Route
 import com.ramon.ramondrive.presentation.navigation.TopLevelDestination
 import com.ramon.ramondrive.presentation.platform.LocalAppVersion
 import com.ramon.ramondrive.presentation.platform.LocalUrlOpener
+import com.ramon.ramondrive.presentation.update.UpdateInstallState
 import com.ramon.ramondrive.presentation.theme.RamonDriveTheme
 import com.ramon.ramondrive.presentation.theme.systemDarkTheme
 import kotlin.time.Duration.Companion.milliseconds
@@ -128,6 +130,8 @@ fun RamonDriveApp(
     }
 
     val pendingUpdate by viewModel.pendingUpdate.collectAsStateWithLifecycle()
+    val availableUpdate by viewModel.availableUpdate.collectAsStateWithLifecycle()
+    val updateInstallState by viewModel.updateInstallState.collectAsStateWithLifecycle()
     val sessionBroken by viewModel.sessionBroken.collectAsStateWithLifecycle()
     val urlOpener = LocalUrlOpener.current
 
@@ -170,21 +174,32 @@ fun RamonDriveApp(
             (LocalLocaleList as ProvidableCompositionLocal<LocaleList>) provides targetLocaleList,
             LocalCompactLayout provides state.compactLayout
         ) {
-            when {
-                state.loading -> Box(
-                    Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background)
-                )
-                state.locked -> LockScreen(onUnlocked = viewModel::unlock)
-                else -> MainScaffold(
-                    pendingShare = pendingShare,
-                    onboardingComplete = state.onboardingComplete,
-                    notificationDestination = notificationDestination,
-                    onDestinationHandled = onDestinationHandled,
-                    onUpdateRequested = { viewModel.checkForUpdate(force = true) },
-                    driveMissing = viewModel.driveMissing
-                )
+            Box(modifier = Modifier.fillMaxSize()) {
+                when {
+                    state.loading -> Box(
+                        Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background)
+                    )
+                    state.locked -> LockScreen(onUnlocked = viewModel::unlock)
+                    else -> MainScaffold(
+                        pendingShare = pendingShare,
+                        onboardingComplete = state.onboardingComplete,
+                        notificationDestination = notificationDestination,
+                        onDestinationHandled = onDestinationHandled,
+                        onUpdateRequested = { viewModel.checkForUpdate(force = true) },
+                        driveMissing = viewModel.driveMissing
+                    )
+                }
+                if (availableUpdate != null && !state.loading && !state.locked) {
+                    UpdateBadge(
+                        progress = (updateInstallState as? UpdateInstallState.Downloading)?.progress,
+                        onClick = viewModel::showUpdate,
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(end = 20.dp, bottom = 104.dp)
+                    )
+                }
             }
             if (sessionBroken) {
                 SessionBrokenDialog(onSignInAgain = viewModel::resetSession)
@@ -192,9 +207,12 @@ fun RamonDriveApp(
             pendingUpdate?.takeIf { !state.loading && !state.locked }?.let { release ->
                 UpdateDialog(
                     currentVersion = LocalAppVersion.current,
+                    canInstall = viewModel.canInstallInApp,
+                    installState = updateInstallState,
                     onOpenUrl = urlOpener::open,
                     release = release,
-                    onDownload = {
+                    onInstall = { viewModel.installUpdate(release) },
+                    onOpenPage = {
                         viewModel.dismissUpdate()
                         urlOpener.open(release.pageUrl)
                     },

@@ -920,6 +920,13 @@
     <string name="about_update_later">Later</string>
     <string name="about_update_ready">Version %1$s is ready to download</string>
     <string name="about_update_title">Update to %1$s</string>
+    <string name="update_available">Update available</string>
+    <string name="update_install_now">Update now</string>
+    <string name="update_downloading">Downloading…</string>
+    <string name="update_downloading_percent">Downloading… %1$d%%</string>
+    <string name="update_permission_needed">Allow RamonDrive to install unknown apps, then tap Update now again.</string>
+    <string name="update_failed">The download failed. Try again or open the release page.</string>
+    <string name="update_open_page">Open release page</string>
     <string name="about_version">Version %1$s</string>
 
     <!-- Snackbar messages -->
