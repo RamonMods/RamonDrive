@@ -173,6 +173,8 @@ import com.ramon.ramondrive.resources.theme_system
 import com.ramon.ramondrive.resources.trash_clear_labels
 import com.ramon.ramondrive.core.telegram.TelegramConnectionState
 import com.ramon.ramondrive.domain.model.AppTheme
+import com.ramon.ramondrive.presentation.theme.appThemeDisplayName
+import com.ramon.ramondrive.presentation.theme.openCodeThemeSpecs
 import com.ramon.ramondrive.domain.model.LayoutDensity
 import com.ramon.ramondrive.domain.model.ViewMode
 import com.ramon.ramondrive.presentation.platform.LocalDownloadLocationConfigurable
@@ -959,7 +961,9 @@ private fun AppearanceSection(state: SettingsUiState, viewModel: SettingsViewMod
     if (showThemeDialog) {
         ChoiceDialog(
             title = stringResource(Res.string.settings_theme),
-            options = AppTheme.entries.zip(stringArrayResource(Res.array.theme_labels)),
+            options = listOf(AppTheme.LIGHT, AppTheme.DARK, AppTheme.AMOLED, AppTheme.SYSTEM)
+                .zip(stringArrayResource(Res.array.theme_labels)) +
+                openCodeThemeSpecs.map { it.theme to it.displayName },
             selected = prefs.theme,
             onSelect = { choice ->
                 showThemeDialog = false
@@ -991,6 +995,7 @@ private fun AppearanceSection(state: SettingsUiState, viewModel: SettingsViewMod
                     AppTheme.DARK -> stringResource(Res.string.theme_dark)
                     AppTheme.AMOLED -> stringResource(Res.string.theme_amoled)
                     AppTheme.SYSTEM -> stringResource(Res.string.theme_system)
+                    else -> appThemeDisplayName(prefs.theme)
                 },
                 onClick = { showThemeDialog = true }
             )

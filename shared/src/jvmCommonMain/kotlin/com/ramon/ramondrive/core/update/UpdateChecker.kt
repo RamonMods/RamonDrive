@@ -33,7 +33,7 @@ class UpdateChecker(
         val latest = release.tag.removePrefix("v").trim()
         if (!isNewer(latest, currentVersion)) return@withContext null
 
-        val asset = release.apkAsset(abi)
+        val asset = release.matchingAsset(abi)
         AppRelease(
             version = latest,
             notes = release.body.orEmpty().trim(),
@@ -41,6 +41,21 @@ class UpdateChecker(
             downloadUrl = asset?.downloadUrl,
             assetName = asset?.name
         )
+    }
+
+    private fun GitHubRelease.matchingAsset(target: String?): GitHubAsset? {
+        val wanted = target?.lowercase()?.trim()?.takeIf { it.isNotEmpty() }
+        if (wanted == "windows") {
+            assets.firstOrNull { it.name.endsWith(".msi", ignoreCase = true) }?.let { return it }
+        }
+        if (wanted == "linux") {
+            assets.firstOrNull { it.name.endsWith(".AppImage", ignoreCase = true) }?.let { return it }
+            assets.firstOrNull { it.name.endsWith(".deb", ignoreCase = true) }?.let { return it }
+        }
+        if (wanted == "macos") {
+            assets.firstOrNull { it.name.endsWith(".dmg", ignoreCase = true) }?.let { return it }
+        }
+        return apkAsset(target)
     }
 
     private fun GitHubRelease.apkAsset(abi: String?): GitHubAsset? {

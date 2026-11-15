@@ -44,6 +44,7 @@ import com.ramon.ramondrive.core.transfer.TransferErrorMessages
 import com.ramon.ramondrive.core.transfer.TransferScheduler
 import com.ramon.ramondrive.core.transfer.transferEngineModule
 import com.ramon.ramondrive.core.update.UpdateChecker
+import com.ramon.ramondrive.desktop.update.DesktopUpdateInstaller
 import com.ramon.ramondrive.data.local.database.MIGRATION_10_11
 import com.ramon.ramondrive.data.local.database.MIGRATION_11_12
 import com.ramon.ramondrive.data.local.database.MIGRATION_12_13
@@ -92,7 +93,6 @@ import com.ramon.ramondrive.domain.usecase.useCaseModule
 import com.ramon.ramondrive.presentation.di.sharedUiModule
 import com.ramon.ramondrive.presentation.platform.PlatformCapabilities
 import com.ramon.ramondrive.presentation.platform.StandardFolderPaths
-import com.ramon.ramondrive.presentation.platform.NoopUpdateInstaller
 import com.ramon.ramondrive.presentation.platform.UpdateInstaller
 import java.io.File
 import kotlinx.coroutines.Dispatchers
@@ -127,8 +127,8 @@ val desktopModule = module {
     singleOf(::TelegramPacer)
     singleOf(::ProxyProbe)
     singleOf(::AppLockManager)
-    single { UpdateChecker(BuildInfo.VERSION) }
-    single<UpdateInstaller> { NoopUpdateInstaller }
+    single { UpdateChecker(BuildInfo.VERSION, desktopOsTarget()) }
+    single<UpdateInstaller> { DesktopUpdateInstaller(get()) }
     singleOf(::DesktopPermissionChecker) bind PermissionChecker::class
     singleOf(::DesktopStandardFolderPaths) bind StandardFolderPaths::class
     singleOf(::DesktopPlatformCapabilities) bind PlatformCapabilities::class
@@ -190,3 +190,13 @@ val desktopModule = module {
             .build()
     }
 }
+
+private fun desktopOsTarget(): String {
+    val os = System.getProperty("os.name").orEmpty().lowercase()
+    return when {
+        os.contains("win") -> "windows"
+        os.contains("mac") || os.contains("darwin") -> "macos"
+        else -> "linux"
+    }
+}
+

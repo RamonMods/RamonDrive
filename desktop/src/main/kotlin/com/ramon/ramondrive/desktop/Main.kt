@@ -40,6 +40,7 @@ import com.ramon.ramondrive.domain.repository.SettingsRepository
 import com.ramon.ramondrive.domain.repository.TransferRepository
 import com.ramon.ramondrive.domain.repository.TrashRepository
 import com.ramon.ramondrive.presentation.RamonDriveApp
+import com.ramon.ramondrive.presentation.theme.resolveDarkTheme
 import com.ramon.ramondrive.presentation.theme.systemDarkTheme
 import com.ramon.ramondrive.resources.Res as SharedRes
 import com.ramon.ramondrive.resources.app_name
@@ -121,11 +122,7 @@ fun main() {
                 settingsRepository.preferences.map { it.theme }.distinctUntilChanged()
             }.collectAsState(initial = AppTheme.SYSTEM)
             val systemDark = systemDarkTheme()
-            val darkTitleBar = when (theme) {
-                AppTheme.LIGHT -> false
-                AppTheme.DARK, AppTheme.AMOLED -> true
-                AppTheme.SYSTEM -> systemDark
-            }
+            val darkTitleBar = theme.resolveDarkTheme(systemDark)
             LaunchedEffect(darkTitleBar) { WindowsTitleBar.setDark(window, darkTitleBar) }
             CompositionLocalProvider(LocalFullscreenController provides fullscreenController) {
                 ProvideDesktopPlatformActions {

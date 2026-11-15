@@ -91,6 +91,7 @@ import com.ramon.ramondrive.presentation.platform.LocalAppVersion
 import com.ramon.ramondrive.presentation.platform.LocalUrlOpener
 import com.ramon.ramondrive.presentation.update.UpdateInstallState
 import com.ramon.ramondrive.presentation.theme.RamonDriveTheme
+import com.ramon.ramondrive.presentation.theme.resolveDarkTheme
 import com.ramon.ramondrive.presentation.theme.systemDarkTheme
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
@@ -123,11 +124,7 @@ fun RamonDriveApp(
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
-    val darkTheme = when (state.theme) {
-        AppTheme.LIGHT -> false
-        AppTheme.DARK, AppTheme.AMOLED -> true
-        AppTheme.SYSTEM -> systemDarkTheme()
-    }
+    val darkTheme = state.theme.resolveDarkTheme(systemDarkTheme())
 
     val pendingUpdate by viewModel.pendingUpdate.collectAsStateWithLifecycle()
     val availableUpdate by viewModel.availableUpdate.collectAsStateWithLifecycle()
@@ -166,6 +163,7 @@ fun RamonDriveApp(
     }
 
     RamonDriveTheme(
+        theme = state.theme,
         darkTheme = darkTheme,
         dynamicColor = state.dynamicColor,
         amoled = state.theme == AppTheme.AMOLED

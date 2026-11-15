@@ -26,7 +26,6 @@ import com.ramon.ramondrive.core.permissions.manifestPermission
 import com.ramon.ramondrive.core.permissions.openAllFilesAccess
 import com.ramon.ramondrive.core.permissions.openAppSettings
 import com.ramon.ramondrive.core.permissions.openBatteryOptimization
-import com.ramon.ramondrive.domain.model.AppTheme
 import com.ramon.ramondrive.domain.model.UserPreferences
 import com.ramon.ramondrive.domain.repository.SettingsRepository
 import com.ramon.ramondrive.presentation.applock.requireDeviceOwner
@@ -36,6 +35,7 @@ import com.ramon.ramondrive.presentation.components.FileSystemFolderPickerDialog
 import com.ramon.ramondrive.presentation.components.FolderListResult
 import com.ramon.ramondrive.presentation.components.LocalFolderItem
 import com.ramon.ramondrive.presentation.theme.RamonDriveTheme
+import com.ramon.ramondrive.presentation.theme.resolveDarkTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.compose.koinInject
@@ -49,11 +49,7 @@ fun ProvidePlatformActions(content: @Composable () -> Unit) {
     val activity = LocalActivity.current
 
     val prefs by settingsRepository.preferences.collectAsStateWithLifecycle(UserPreferences())
-    val darkTheme = when (prefs.theme) {
-        AppTheme.LIGHT -> false
-        AppTheme.DARK, AppTheme.AMOLED -> true
-        AppTheme.SYSTEM -> isSystemInDarkTheme()
-    }
+    val darkTheme = prefs.theme.resolveDarkTheme(isSystemInDarkTheme())
 
     val urlOpener = remember(context) { UrlOpener { url -> openLink(context, url) } }
     val telegramLinkOpener = remember(context) { AndroidTelegramLinkOpener(context) }
@@ -200,7 +196,7 @@ fun ProvidePlatformActions(content: @Composable () -> Unit) {
         content()
 
         activeFolderPickerCallback?.let { callback ->
-            RamonDriveTheme(darkTheme = darkTheme, dynamicColor = prefs.dynamicColor) {
+            RamonDriveTheme(theme = prefs.theme, darkTheme = darkTheme, dynamicColor = prefs.dynamicColor) {
                 FileSystemFolderPickerDialog(
                     rootPath = externalStorageRoot,
                     listSubfolders = { path ->
