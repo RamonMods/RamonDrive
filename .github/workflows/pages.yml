@@ -34,7 +34,7 @@ jobs:
       - name: Deploy main again
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run pages.yml --ref main
+        run: gh workflow run pages.yml --ref main --repo "$GITHUB_REPOSITORY"
 
   deploy:
     name: Deploy
