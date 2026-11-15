@@ -132,6 +132,10 @@ internal class FakeTelegram : TelegramClient by unused() {
     override suspend fun deleteMessages(chatId: Long, messageIds: List<Long>) {
         deletedMessages += messageIds
         storedFiles.keys.removeAll { it.messageId in messageIds }
+        if (folderStateDocument?.messageId in messageIds) {
+            folderStateDocument = null
+            folderStateFile = null
+        }
     }
 
     override suspend fun getDocument(chatId: Long, messageId: Long): RemoteDocument? =

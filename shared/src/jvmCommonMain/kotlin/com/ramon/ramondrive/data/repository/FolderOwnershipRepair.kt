@@ -62,6 +62,14 @@ class FolderOwnershipRepair(
         return strays.size
     }
 
+    private suspend fun markFolderStateDirty() {
+        folderDao.markPendingPublish()
+        settingsRepository.update {
+            it.copy(folderStateRevision = it.folderStateRevision + 1)
+        }
+        publishScheduler.kick()
+    }
+
     private suspend fun removeEmptied(folderIds: Set<String>) {
         val deletedAt = System.currentTimeMillis()
         var removed = 0
@@ -77,7 +85,7 @@ class FolderOwnershipRepair(
                 cursor = folder.parentId ?: folder.preTrashParentId
             }
         }
-        if (removed > 0) folderDao.markPendingPublish()
+        if (removed > 0) markFolderStateDirty()
     }
 
     private suspend fun repair(): Int {
@@ -95,6 +103,7 @@ class FolderOwnershipRepair(
             folderDao.setChatId(folder.id, owner)
             repaired++
         }
+        if (repaired > 0) markFolderStateDirty()
         return repaired
     }
 

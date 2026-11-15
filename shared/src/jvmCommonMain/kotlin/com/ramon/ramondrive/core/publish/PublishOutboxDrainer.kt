@@ -76,18 +76,28 @@ class PublishOutboxDrainer(
         }
 
         repeat(MAX_FOLDER_PUSHES) {
-            if (folderDao.pendingPublishCount() == 0) return true
-            val before = folderSnapshot()
+            val chatId = folderStateSynchronizer.chatId()
+            if (!folderStatePending(chatId)) return true
+            val revision = folderStateSynchronizer.pendingRevision()
+            val before = folderSnapshot(chatId)
             val pushed = runCatching { folderStateSynchronizer.push() }
                 .onFailure { SafeLog.w(TAG, "Folder state push failed", it) }
                 .isSuccess
             if (!pushed) return false
+            var rowsCleared = false
             database.inImmediateTransaction {
-                if (folderSnapshot() == before) folderDao.clearPendingPublish()
+                if (folderSnapshot(chatId) == before) {
+                    folderDao.clearPendingPublishIn(chatId)
+                    rowsCleared = true
+                }
             }
+            if (rowsCleared) folderStateSynchronizer.clearPendingPublish(revision)
         }
-        return folderDao.pendingPublishCount() == 0
+        return !folderStatePending(folderStateSynchronizer.chatId())
     }
+
+    private suspend fun folderStatePending(chatId: Long): Boolean =
+        folderDao.pendingPublishCountIn(chatId) > 0 || folderStateSynchronizer.hasPendingPublish()
 
     private suspend fun waitOut(
         seconds: Int,
@@ -121,9 +131,9 @@ class PublishOutboxDrainer(
         }
     }
 
-    private suspend fun folderSnapshot() = Pair(
-        folderDao.allFoldersAnyOwner().map { it.copy(pendingPublish = false) }.sortedBy { it.id },
-        tombstoneDao.all().sortedBy { it.id }
+    private suspend fun folderSnapshot(chatId: Long) = Pair(
+        folderDao.allFolders(chatId).map { it.copy(pendingPublish = false) }.sortedBy { it.id },
+        tombstoneDao.inChat(chatId).sortedBy { it.id }
     )
 
     /**

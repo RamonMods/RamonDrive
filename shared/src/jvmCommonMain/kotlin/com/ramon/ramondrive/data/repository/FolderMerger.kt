@@ -16,13 +16,13 @@ class FolderMerger(
     private val database: RamonDriveDatabase
 ) {
 
-    suspend fun mergeDuplicates(chatId: Long): Int {
-        val merged = database.inImmediateTransaction { mergeAll(chatId) }
+    suspend fun mergeDuplicates(chatId: Long, markPending: Boolean = true): Int {
+        val merged = database.inImmediateTransaction { mergeAll(chatId, markPending) }
         if (merged > 0) SafeLog.d(TAG, "Merged $merged duplicate folders")
         return merged
     }
 
-    private suspend fun mergeAll(chatId: Long): Int {
+    private suspend fun mergeAll(chatId: Long, markPending: Boolean): Int {
         var merged = 0
         repeat(MAX_PASSES) {
             val groups = folderDao.allFolders(chatId)
@@ -45,7 +45,7 @@ class FolderMerger(
                     merged++
                 }
             }
-            folderDao.markPendingPublish()
+            if (markPending) folderDao.markPendingPublish()
         }
         return merged
     }

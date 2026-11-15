@@ -362,6 +362,12 @@
     <string name="files_folder_merge">Объединить</string>
     <string name="files_folder_keep_both">Оставить обе</string>
     <string name="files_import_preparing">Подготовка файлов к загрузке…</string>
+    <string name="files_import_zipping">Упаковка папки в ZIP…</string>
+    <string name="files_import_zip_failed">Не удалось упаковать папку в ZIP.</string>
+    <string name="files_upload_folder_title">Загрузить папку</string>
+    <string name="files_upload_folder_message">Выберите способ отправки папки. ZIP — один файл, быстрее и сохраняет структуру папок.</string>
+    <string name="files_upload_folder_as_zip">Отправить как ZIP</string>
+    <string name="files_upload_folder_as_files">Отправить отдельные файлы</string>
     <string name="files_import_restored">Восстановлено %1$d из корзины</string>
     <string name="files_import_uploading">Загрузка %1$d</string>
     <string name="files_import_uploading_copied">Загрузка %1$d, скопировано %2$d имеющихся в Telegram</string>

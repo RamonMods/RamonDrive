@@ -10,6 +10,7 @@ import com.ramon.ramondrive.core.common.AppResult
 import com.ramon.ramondrive.core.files.DeleteConsentRequest
 import com.ramon.ramondrive.core.files.FileImporter
 import com.ramon.ramondrive.core.files.ImportSource
+import com.ramon.ramondrive.core.files.ImportedFile
 import com.ramon.ramondrive.core.files.MimeTypes
 import com.ramon.ramondrive.core.files.PendingShare
 import com.ramon.ramondrive.domain.model.DriveFile
@@ -46,6 +47,8 @@ import com.ramon.ramondrive.resources.files_import_uploading_copied
 import com.ramon.ramondrive.resources.files_import_uploading_duplicates
 import com.ramon.ramondrive.resources.files_import_uploading_failed
 import com.ramon.ramondrive.resources.files_import_uploading_restored
+import com.ramon.ramondrive.resources.files_import_zipping
+import com.ramon.ramondrive.resources.files_import_zip_failed
 import com.ramon.ramondrive.resources.files_moving_to_trash
 import com.ramon.ramondrive.resources.files_queued_for_download
 import com.ramon.ramondrive.resources.files_queued_for_upload
@@ -62,6 +65,7 @@ import com.ramon.ramondrive.resources.note_not_editable
 import com.ramon.ramondrive.resources.trash_delete_partial
 import com.ramon.ramondrive.resources.trash_deleted_permanently
 import com.ramon.ramondrive.resources.trash_deleting_items
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -656,6 +660,53 @@ class FilesViewModel(
     private val _folderConflict = MutableStateFlow<FolderConflict?>(null)
     val folderConflict: StateFlow<FolderConflict?> = _folderConflict.asStateFlow()
 
+    /**
+     * Packs the picked folder into one archive and imports it as a single file. The archive lives in
+     * the import staging area, so it is deleted after the upload or by the orphan sweep.
+     */
+    fun importFolderAsZip(reference: String, target: String? = folderId) {
+        importScope.launch {
+            _working.value = UiText.Resource(Res.string.files_import_zipping)
+            var archive: ImportedFile? = null
+            try {
+                archive = fileImporter.archiveFolder(reference)
+                if (archive == null) {
+                    _messages.tryEmit(UiText.Resource(Res.string.files_import_zip_failed))
+                    return@launch
+                }
+                runImport(
+                    listOf(
+                        ImportSource(
+                            reference = archive.path,
+                            relativeFolder = "",
+                            displayName = archive.name
+                        )
+                    ),
+                    target
+                )
+            } catch (e: CancellationException) {
+                // The orphan sweep owns leftovers of an interrupted import; deleting here could
+                // remove an archive a committed row already points at.
+                throw e
+            } catch (e: Exception) {
+                discardUnusedArchive(archive)
+                _messages.tryEmit(UiText.Resource(Res.string.files_import_zip_failed))
+            } finally {
+                _working.value = null
+            }
+        }
+    }
+
+    /**
+     * A failed import can leave the archive behind. Only staged, unreferenced archives are removed;
+     * anything the database already knows about must survive so the upload can still find it.
+     */
+    private suspend fun discardUnusedArchive(archive: ImportedFile?) {
+        if (archive == null) return
+        if (fileRepository.findDuplicate(archive.path) != null) return
+        fileImporter.discard(archive)
+    }
+
     fun importAndUpload(uris: List<String>, target: String? = folderId) {
         if (uris.isEmpty()) return
         importScope.launch {
@@ -713,6 +764,9 @@ class FilesViewModel(
             )
             val file = fileImporter.import(source.reference)
             if (file == null) {
+                fileImporter.discard(
+                    ImportedFile(source.reference, source.displayName.orEmpty(), 0)
+                )
                 failed++
                 continue
             }
@@ -731,7 +785,11 @@ class FilesViewModel(
                 continue
             }
             when (
-                val result = fileRepository.importLocalFile(file.path, destination, file.name)
+                val result = fileRepository.importLocalFile(
+                    file.path,
+                    destination,
+                    source.displayName ?: file.name
+                )
             ) {
                 is AppResult.Success -> {
                     val drive = result.value

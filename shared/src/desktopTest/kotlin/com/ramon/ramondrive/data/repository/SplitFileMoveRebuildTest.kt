@@ -111,7 +111,8 @@ class SplitFileMoveRebuildTest {
         filePartDao = database.filePartDao(),
         activeChannel = harness.activeChannel,
         transferRepository = unused<TransferRepository>(),
-        tombstoneDao = database.folderTombstoneDao()
+        tombstoneDao = database.folderTombstoneDao(),
+        settingsRepository = harness.settings
     )
 
     private suspend fun uploadedUnderOldSub(withFolderId: Boolean = false) {

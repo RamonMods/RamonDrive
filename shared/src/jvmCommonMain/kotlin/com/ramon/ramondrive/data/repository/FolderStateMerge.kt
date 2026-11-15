@@ -32,6 +32,11 @@ internal object FolderStateMerge {
         val folders = alive.map { entry ->
             if (entry.parentId != null && entry.parentId !in aliveIds) entry.copy(parentId = null) else entry
         }
-        return RemoteFolderState(folders = folders, deleted = deletions)
+        return RemoteFolderState(
+            folders = folders,
+            deleted = deletions,
+            indexMessageId = remote?.indexMessageId,
+            extra = remote?.extra.orEmpty()
+        )
     }
 }

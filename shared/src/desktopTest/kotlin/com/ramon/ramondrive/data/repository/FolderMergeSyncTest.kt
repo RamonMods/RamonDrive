@@ -185,7 +185,8 @@ class FolderMergeSyncTest {
             filePartDao = database.filePartDao(),
             activeChannel = harness.activeChannel,
             transferRepository = unused<TransferRepository>(),
-            tombstoneDao = tombstones
+            tombstoneDao = tombstones,
+            settingsRepository = harness.settings
         )
 
         trash.emptyTrash()

@@ -33,6 +33,7 @@ object PreferenceKeys {
     val ENCRYPT_THUMBNAILS = booleanPreferencesKey("encrypt_thumbnails")
     val KEY_BACKUP_CREATED = booleanPreferencesKey("key_backup_created")
     val FOLDER_OWNERSHIP_REPAIRED = booleanPreferencesKey("folder_ownership_repaired")
+    val FOLDER_STATE_REVISION = longPreferencesKey("folder_state_revision")
 
     val THEME = stringPreferencesKey("theme")
     val LANGUAGE = stringPreferencesKey("language")

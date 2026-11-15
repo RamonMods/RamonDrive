@@ -471,6 +471,9 @@ class FileRepositoryImpl(
 
     private suspend fun markFolderStateDirty() {
         folderDao.markPendingPublish()
+        settingsRepository.update {
+            it.copy(folderStateRevision = it.folderStateRevision + 1)
+        }
         publishScheduler.kick()
     }
 

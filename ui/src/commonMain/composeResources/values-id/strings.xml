@@ -334,6 +334,12 @@
     <string name="files_folder_merge">Gabungkan</string>
     <string name="files_folder_keep_both">Simpan keduanya</string>
     <string name="files_import_preparing">Menyiapkan file untuk diunggah…</string>
+    <string name="files_import_zipping">Mengemas folder menjadi ZIP…</string>
+    <string name="files_import_zip_failed">Gagal mengemas folder menjadi ZIP.</string>
+    <string name="files_upload_folder_title">Unggah folder</string>
+    <string name="files_upload_folder_message">Pilih cara mengirim folder ini. ZIP menjadi satu file, lebih cepat, dan mempertahankan struktur folder.</string>
+    <string name="files_upload_folder_as_zip">Kirim sebagai ZIP</string>
+    <string name="files_upload_folder_as_files">Kirim file individual</string>
     <string name="files_import_restored">%1$d dipulihkan dari tempat sampah</string>
     <string name="files_import_uploading">Mengunggah %1$d</string>
     <string name="files_import_uploading_copied">Mengunggah %1$d, %2$d disalin (sudah ada di Telegram)</string>

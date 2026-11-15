@@ -320,6 +320,12 @@
     <string name="files_folder_merge">合并</string>
     <string name="files_folder_keep_both">保留两者</string>
     <string name="files_import_preparing">正在准备上传文件…</string>
+    <string name="files_import_zipping">正在将文件夹打包为 ZIP…</string>
+    <string name="files_import_zip_failed">无法将文件夹打包为 ZIP。</string>
+    <string name="files_upload_folder_title">上传文件夹</string>
+    <string name="files_upload_folder_message">选择发送此文件夹的方式。ZIP 是单个文件，速度更快，并保留文件夹结构。</string>
+    <string name="files_upload_folder_as_zip">以 ZIP 发送</string>
+    <string name="files_upload_folder_as_files">发送单个文件</string>
     <string name="files_import_restored">已从回收站恢复 %1$d 个</string>
     <string name="files_import_uploading">正在上传 %1$d 个</string>
     <string name="files_import_uploading_copied">正在上传 %1$d 个，已复制 %2$d 个 Telegram 中已有的文件</string>

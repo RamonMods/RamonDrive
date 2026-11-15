@@ -11,6 +11,7 @@ object MimeTypes {
             "mkv" -> "video/x-matroska"
             "flac" -> "audio/flac"
             "opus" -> "audio/opus"
+            "zip" -> "application/zip"
             "7z" -> "application/x-7z-compressed"
             "rar" -> "application/vnd.rar"
             "md" -> "text/markdown"

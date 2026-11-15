@@ -57,7 +57,8 @@ class FolderPathResolver(
         path: String,
         leafId: String? = null,
         startParentId: String? = null,
-        chatId: Long? = null
+        chatId: Long? = null,
+        markPending: Boolean = true
     ): String? {
         if (path.isBlank()) return startParentId
         val owner = chatId ?: activeChannel.id()
@@ -66,6 +67,7 @@ class FolderPathResolver(
                 tombstoneDao.idIfDeleted(it) == null && folderDao.byId(it) == null
             }
             var parentId: String? = startParentId
+            var created = false
             val segments = path.split('/').filter { it.isNotBlank() }.take(MAX_DEPTH)
             for ((index, segment) in segments.withIndex()) {
                 val existing = folderDao.childrenOf(parentId, owner)
@@ -82,9 +84,11 @@ class FolderPathResolver(
                         modifiedAt = now
                     )
                     folderDao.upsert(folder)
+                    created = true
                     folder.id
                 }
             }
+            if (created && markPending) folderDao.markPendingPublish()
             parentId
         }
     }

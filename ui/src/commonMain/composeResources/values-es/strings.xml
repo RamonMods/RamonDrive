@@ -334,6 +334,12 @@
     <string name="files_folder_merge">Combinar</string>
     <string name="files_folder_keep_both">Conservar ambas</string>
     <string name="files_import_preparing">Preparando archivos para subir…</string>
+    <string name="files_import_zipping">Comprimiendo la carpeta en ZIP…</string>
+    <string name="files_import_zip_failed">No se pudo comprimir la carpeta en ZIP.</string>
+    <string name="files_upload_folder_title">Subir carpeta</string>
+    <string name="files_upload_folder_message">Elige cómo enviar esta carpeta. El ZIP es un solo archivo, es más rápido y conserva la estructura de carpetas.</string>
+    <string name="files_upload_folder_as_zip">Enviar como ZIP</string>
+    <string name="files_upload_folder_as_files">Enviar archivos individuales</string>
     <string name="files_import_restored">Se restauraron %1$d de la papelera</string>
     <string name="files_import_uploading">Subiendo %1$d</string>
     <string name="files_import_uploading_copied">Subiendo %1$d, %2$d copiados que ya estaban en Telegram</string>

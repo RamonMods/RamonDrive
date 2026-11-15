@@ -21,6 +21,7 @@ import com.ramon.ramondrive.data.local.entity.PendingDeleteEntity
 import com.ramon.ramondrive.data.local.entity.FolderTombstoneEntity
 import com.ramon.ramondrive.data.mapper.toDomain
 import com.ramon.ramondrive.domain.model.TrashItem
+import com.ramon.ramondrive.domain.repository.SettingsRepository
 import com.ramon.ramondrive.domain.repository.TransferRepository
 import com.ramon.ramondrive.domain.repository.TrashRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,7 +46,8 @@ class TrashRepositoryImpl(
     private val filePartDao: FilePartDao,
     private val activeChannel: ActiveChannel,
     private val transferRepository: TransferRepository,
-    private val tombstoneDao: FolderTombstoneDao
+    private val tombstoneDao: FolderTombstoneDao,
+    private val settingsRepository: SettingsRepository
 ) : TrashRepository {
 
     override fun observeTrash(): Flow<List<TrashItem>> =
@@ -109,18 +111,24 @@ class TrashRepositoryImpl(
 
     private suspend fun markFolderStateDirty() {
         folderDao.markPendingPublish()
+        settingsRepository.update {
+            it.copy(folderStateRevision = it.folderStateRevision + 1)
+        }
         publishScheduler.kick()
     }
 
     override suspend fun repairTrashTree() {
         var repaired: Int
+        var moved = 0
         var guard = 0
         do {
             val orphans = folderDao.untrashedChildrenOfTrashed(activeChannel.id())
             val trashedAt = System.currentTimeMillis()
             orphans.forEach { folder -> folderDao.moveToTrash(folder.id, trashedAt) }
             repaired = orphans.size
+            moved += repaired
         } while (repaired > 0 && guard++ < MAX_FOLDER_DEPTH)
+        if (moved > 0) markFolderStateDirty()
     }
 
     override suspend fun restoreFiles(ids: List<String>): AppResult<Unit> {

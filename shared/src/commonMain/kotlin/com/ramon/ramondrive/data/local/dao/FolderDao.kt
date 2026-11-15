@@ -20,11 +20,25 @@ interface FolderDao {
     @Query("UPDATE folders SET pendingPublish = 1")
     suspend fun markPendingPublish()
 
+    /**
+     * The folder state document is per storage chat, so a change in one drive must not clear the
+     * marker of another drive. Unowned rows are included because they get adopted by the first
+     * channel that opens.
+     */
+    @Query("UPDATE folders SET pendingPublish = 1 WHERE chatId IS :chatId OR chatId IS NULL")
+    suspend fun markPendingPublishIn(chatId: Long)
+
     @Query("UPDATE folders SET pendingPublish = 0")
     suspend fun clearPendingPublish()
 
+    @Query("UPDATE folders SET pendingPublish = 0 WHERE chatId IS :chatId")
+    suspend fun clearPendingPublishIn(chatId: Long)
+
     @Query("SELECT COUNT(*) FROM folders WHERE pendingPublish = 1")
     suspend fun pendingPublishCount(): Int
+
+    @Query("SELECT COUNT(*) FROM folders WHERE pendingPublish = 1 AND chatId IS :chatId")
+    suspend fun pendingPublishCountIn(chatId: Long): Int
 
     @Query("UPDATE folders SET parentId = :to, changedAt = :changedAt WHERE parentId = :from")
     suspend fun reparentChildren(from: String, to: String, changedAt: Long)
@@ -98,7 +112,7 @@ interface FolderDao {
     ): Flow<List<FolderWithCount>>
 
     @Query("UPDATE folders SET chatId = :chatId WHERE chatId IS NULL")
-    suspend fun claimUnownedRows(chatId: Long)
+    suspend fun claimUnownedRows(chatId: Long): Int
 
     @Query(
         """SELECT * FROM folders

@@ -98,6 +98,8 @@ class SettingsRepositoryImpl(
                 ?: defaults.encryptThumbnails,
             folderOwnershipRepaired = this[PreferenceKeys.FOLDER_OWNERSHIP_REPAIRED]
                 ?: defaults.folderOwnershipRepaired,
+            folderStateRevision = this[PreferenceKeys.FOLDER_STATE_REVISION]
+                ?: defaults.folderStateRevision,
             keyBackupCreated = this[PreferenceKeys.KEY_BACKUP_CREATED]
                 ?: defaults.keyBackupCreated,
             theme = enumOrDefault(this[PreferenceKeys.THEME], defaults.theme),
@@ -194,6 +196,7 @@ class SettingsRepositoryImpl(
         this[PreferenceKeys.ENCRYPT_THUMBNAILS] = prefs.encryptThumbnails
         this[PreferenceKeys.KEY_BACKUP_CREATED] = prefs.keyBackupCreated
         this[PreferenceKeys.FOLDER_OWNERSHIP_REPAIRED] = prefs.folderOwnershipRepaired
+        this[PreferenceKeys.FOLDER_STATE_REVISION] = prefs.folderStateRevision
         this[PreferenceKeys.THEME] = prefs.theme.name
         this[PreferenceKeys.LANGUAGE] = prefs.language.code
         this[PreferenceKeys.DYNAMIC_COLOR] = prefs.dynamicColor

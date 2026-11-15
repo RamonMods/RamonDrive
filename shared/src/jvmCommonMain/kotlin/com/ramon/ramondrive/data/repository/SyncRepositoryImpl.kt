@@ -141,11 +141,19 @@ class SyncRepositoryImpl(
 
         var fromSnapshot = 0
         if (!incremental) {
-            if (folderDao.pendingPublishCount() > 0) publishScheduler.kick()
+            if (folderDao.pendingPublishCount() > 0 ||
+                folderStateSynchronizer.hasPendingPublish()
+            ) {
+                publishScheduler.kick()
+            }
             runCatching { folderStateSynchronizer.pull() }
                 .onFailure { SafeLog.w(TAG, "Folder state pull failed", it) }
             folderMerger.mergeDuplicates(chatId)
-            if (folderDao.pendingPublishCount() > 0) publishScheduler.kick()
+            if (folderDao.pendingPublishCount() > 0 ||
+                folderStateSynchronizer.hasPendingPublish()
+            ) {
+                publishScheduler.kick()
+            }
             if (fileDao.fileCount(chatId) == 0) fromSnapshot = applySnapshot(chatId, quiet)
         }
 
@@ -233,6 +241,15 @@ class SyncRepositoryImpl(
     }
 
     private suspend fun applySnapshot(chatId: Long, quiet: Boolean): Int {
+        // A snapshot is a point-in-time copy. Applying it while a folder deletion or a pending
+        // message delete has not reached the remote chat can resurrect what the user removed.
+        if (folderDao.pendingPublishCount() > 0 ||
+            folderStateSynchronizer.hasPendingPublish() ||
+            pendingDeleteDao.messageIdsIn(chatId).isNotEmpty()
+        ) {
+            SafeLog.d(TAG, "Skipping snapshot: local deletes or folder changes are pending")
+            return 0
+        }
         val documents = runCatching { indexSnapshot.load(chatId) }
             .onFailure { SafeLog.w(TAG, "Index snapshot load failed", it) }
             .getOrNull()
@@ -328,7 +345,11 @@ class SyncRepositoryImpl(
             if (documents.any { it.isFolderState() }) {
                 runCatching { folderStateSynchronizer.pull() }
                     .onFailure { SafeLog.w(TAG, "Folder state pull failed", it) }
-                if (folderDao.pendingPublishCount() > 0) publishScheduler.kick()
+                if (folderDao.pendingPublishCount() > 0 ||
+                    folderStateSynchronizer.hasPendingPublish()
+                ) {
+                    publishScheduler.kick()
+                }
             }
 
             val files = documents.filter {
@@ -450,7 +471,8 @@ class SyncRepositoryImpl(
                 ?: folderPathResolver.resolveOrCreate(
                     manifest.folderPath,
                     manifest.folderId,
-                    chatId = chatId
+                    chatId = chatId,
+                    markPending = false
                 ).also { created ->
                     SafeLog.d(
                         TAG,

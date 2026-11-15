@@ -13,7 +13,7 @@ class ChannelOwnership(
 
     suspend fun claimUnowned(chatId: Long) {
         fileDao.claimUnownedRows(chatId)
-        folderDao.claimUnownedRows(chatId)
+        if (folderDao.claimUnownedRows(chatId) > 0) folderDao.markPendingPublish()
         exclusionDao.claimUnownedRows(chatId)
     }
 }

@@ -158,7 +158,8 @@ class CrossDriveFolderTest {
         filePartDao = database.filePartDao(),
         activeChannel = harness.activeChannel,
         transferRepository = unused<TransferRepository>(),
-        tombstoneDao = database.folderTombstoneDao()
+        tombstoneDao = database.folderTombstoneDao(),
+        settingsRepository = harness.settings
     )
 
     private fun folder(id: String, name: String, chatId: Long) = FolderEntity(

@@ -8,6 +8,9 @@ interface FileImporter {
     /** A folder yields one entry per file inside it; anything else yields the reference itself. */
     fun expand(reference: String): List<ImportSource>
 
+    /** Packs a folder into a single archive in the staging area; null when it cannot be read. */
+    fun archiveFolder(reference: String): ImportedFile?
+
     fun discard(imported: ImportedFile)
 
     fun isStaged(path: String): Boolean

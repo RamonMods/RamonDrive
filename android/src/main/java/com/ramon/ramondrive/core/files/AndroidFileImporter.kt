@@ -73,6 +73,9 @@ class AndroidFileImporter(
     override fun expand(reference: String): List<ImportSource> =
         expandDirectory(reference) ?: listOf(ImportSource(reference, ""))
 
+    override fun archiveFolder(reference: String): ImportedFile? =
+        archiveDirectory(reference, File(context.filesDir, IMPORT_DIR).apply { mkdirs() })
+
     override fun isStaged(path: String): Boolean =
         File(path).parentFile == File(context.filesDir, IMPORT_DIR)
 

@@ -210,6 +210,10 @@ import com.ramon.ramondrive.resources.files_share_destination_confirm
 import com.ramon.ramondrive.resources.files_share_destination_title
 import com.ramon.ramondrive.resources.files_show_in_file_manager
 import com.ramon.ramondrive.resources.files_sort
+import com.ramon.ramondrive.resources.files_upload_folder_as_files
+import com.ramon.ramondrive.resources.files_upload_folder_as_zip
+import com.ramon.ramondrive.resources.files_upload_folder_message
+import com.ramon.ramondrive.resources.files_upload_folder_title
 import com.ramon.ramondrive.resources.info_details
 import com.ramon.ramondrive.resources.note_edit_action
 import com.ramon.ramondrive.resources.nav_files
@@ -258,6 +262,7 @@ fun FilesScreen(
     var showCopyPicker by remember { mutableStateOf(false) }
     var showSelectionOverflow by remember { mutableStateOf(false) }
     var confirmTrash by remember { mutableStateOf(false) }
+    var pendingFolderUpload by remember { mutableStateOf<String?>(null) }
     val uploadPicker = LocalMultiFilePicker.current
     val onPickUploads = {
         uploadPicker.pick { references ->
@@ -267,7 +272,7 @@ fun FilesScreen(
     val folderUploadPicker = LocalFolderPicker.current
     val onPickUploadFolder = {
         folderUploadPicker.pick { result ->
-            if (result is PickResult.Picked) viewModel.importAndUpload(listOf(result.path))
+            if (result is PickResult.Picked) pendingFolderUpload = result.path
         }
     }
 
@@ -798,6 +803,38 @@ fun FilesScreen(
                         onClick = viewModel::keepBothFolders,
                         shapes = ButtonDefaults.shapes()
                     ) { Text(stringResource(Res.string.files_folder_keep_both)) }
+                }
+            }
+        )
+    }
+
+    pendingFolderUpload?.let { path ->
+        AlertDialog(
+            onDismissRequest = { pendingFolderUpload = null },
+            title = { Text(stringResource(Res.string.files_upload_folder_title)) },
+            text = { Text(stringResource(Res.string.files_upload_folder_message)) },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        pendingFolderUpload = null
+                        viewModel.importFolderAsZip(path)
+                    },
+                    shapes = ButtonDefaults.shapes()
+                ) { Text(stringResource(Res.string.files_upload_folder_as_zip)) }
+            },
+            dismissButton = {
+                Row {
+                    TextButton(
+                        onClick = {
+                            pendingFolderUpload = null
+                            viewModel.importAndUpload(listOf(path))
+                        },
+                        shapes = ButtonDefaults.shapes()
+                    ) { Text(stringResource(Res.string.files_upload_folder_as_files)) }
+                    TextButton(
+                        onClick = { pendingFolderUpload = null },
+                        shapes = ButtonDefaults.shapes()
+                    ) { Text(stringResource(Res.string.common_cancel)) }
                 }
             }
         )

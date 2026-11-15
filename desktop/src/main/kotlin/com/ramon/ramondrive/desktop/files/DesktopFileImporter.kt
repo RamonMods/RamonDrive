@@ -2,6 +2,7 @@ package com.ramon.ramondrive.desktop.files
 
 import com.ramon.ramondrive.core.files.AppStoragePaths
 import com.ramon.ramondrive.core.files.ImportSource
+import com.ramon.ramondrive.core.files.archiveDirectory
 import com.ramon.ramondrive.core.files.expandDirectory
 import com.ramon.ramondrive.core.files.FileImporter
 import com.ramon.ramondrive.core.files.FileNameUtils
@@ -32,6 +33,9 @@ class DesktopFileImporter(
 
     override fun expand(reference: String): List<ImportSource> =
         expandDirectory(reference) ?: listOf(ImportSource(reference, ""))
+
+    override fun archiveFolder(reference: String): ImportedFile? =
+        archiveDirectory(reference, File(storagePaths.filesDir, IMPORT_DIR).apply { mkdirs() })
 
     override fun isStaged(path: String): Boolean =
         File(path).parentFile == File(storagePaths.filesDir, IMPORT_DIR)

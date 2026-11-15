@@ -6,5 +6,7 @@ package com.ramon.ramondrive.core.files
  */
 data class ImportSource(
     val reference: String,
-    val relativeFolder: String
+    val relativeFolder: String,
+    /** Overrides the name the platform would infer from [reference], e.g. a packed folder. */
+    val displayName: String? = null
 )

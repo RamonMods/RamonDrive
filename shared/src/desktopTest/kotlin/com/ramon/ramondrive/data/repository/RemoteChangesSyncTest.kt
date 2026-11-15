@@ -168,7 +168,7 @@ class RemoteChangesSyncTest {
     @Test
     fun `a folder created from a file path takes the flags from the folder document`() =
         runBlocking {
-            harness.folderPaths.resolveOrCreate("Trips", "trips")
+            harness.folderPaths.resolveOrCreate("Trips", "trips", markPending = false)
             telegram.publishFolderState(
                 RemoteFolderState(folders = listOf(folder("trips", "Trips").copy(hidden = true)))
             )

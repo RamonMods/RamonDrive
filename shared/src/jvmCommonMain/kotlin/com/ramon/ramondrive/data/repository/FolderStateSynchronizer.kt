@@ -54,6 +54,29 @@ class FolderStateSynchronizer(
 
     suspend fun pointIndexAt(messageId: Long) = mutex.withLock { publish(pointIndexAt = messageId) }
 
+    /** Zero means the last folder change was already published. */
+    suspend fun pendingRevision(): Long = settingsRepository.preferences.first().folderStateRevision
+
+    suspend fun hasPendingPublish(): Boolean = pendingRevision() > 0L
+
+    /** The chat whose folder document [push] and [pull] operate on. */
+    suspend fun chatId(): Long = storageChatId()
+
+    /**
+     * Clears only the revision that was published. A change made while the upload was running
+     * increments it again, so its marker survives.
+     */
+    suspend fun clearPendingPublish(revision: Long) {
+        if (revision <= 0L) return
+        settingsRepository.update {
+            if (it.folderStateRevision == revision) {
+                it.copy(folderStateRevision = 0L)
+            } else {
+                it
+            }
+        }
+    }
+
     private suspend fun publish(pointIndexAt: Long?) {
         val chatId = storageChatId()
         val existing = findStateDocuments(chatId)
@@ -70,6 +93,20 @@ class FolderStateSynchronizer(
             extra = remote?.extra.orEmpty()
         )
         applyLocally(chatId, state)
+
+        if (state.folders.isEmpty() && state.deleted.isEmpty() &&
+            state.indexMessageId == null && state.extra.isEmpty()
+        ) {
+            // A copy older than the newest burst would otherwise become current again and bring
+            // deleted folders back. Removing the state means removing every copy of it.
+            val all = findStateDocuments(chatId, includeOlderBursts = true)
+            if (all.isNotEmpty()) {
+                telegramClient.deleteMessages(chatId, all.map { it.messageId })
+            }
+            tombstoneDao.deleteOlderThan(deletionCutoff())
+            indexMessageId = null
+            return
+        }
 
         val staging = File(storagePaths.cacheDir, RemoteFolderState.FILE_NAME)
         val payload = FolderStateCodec.encode(state).toByteArray(Charsets.UTF_8)
@@ -121,16 +158,18 @@ class FolderStateSynchronizer(
 
     /** Never publishes, so applying other devices' changes cannot echo back. */
     suspend fun pull(): Int = mutex.withLock {
-        if (folderDao.pendingPublishCount() > 0) return@withLock 0
+        if (folderDao.pendingPublishCount() > 0 || hasPendingPublish()) return@withLock 0
         val chatId = storageChatId()
+        val documents = findStateDocuments(chatId)
         var remote: RemoteFolderState? = null
-        for (document in findStateDocuments(chatId)) {
+        for (document in documents) {
             val read = read(document) as? RemoteFolderRead.Ok ?: continue
             remote = combined(remote, read.state)
         }
         val found = remote ?: return@withLock 0
-        indexMessageId = found.indexMessageId
-        applyLocally(chatId, merged(chatId, found))
+        val state = merged(chatId, found)
+        indexMessageId = state.indexMessageId
+        applyLocally(chatId, state, markMergedDuplicates = false)
     }
 
     private suspend fun read(document: RemoteDocument): RemoteFolderRead {
@@ -174,7 +213,11 @@ class FolderStateSynchronizer(
      * Updates instead of REPLACE: REPLACE deletes the row first, and the foreign keys would take
      * its subfolders with it.
      */
-    private suspend fun applyLocally(chatId: Long, state: RemoteFolderState): Int {
+    private suspend fun applyLocally(
+        chatId: Long,
+        state: RemoteFolderState,
+        markMergedDuplicates: Boolean = true
+    ): Int {
         var changed = 0
         for (entry in state.folders.sortedBy { depthOf(it, state.folders) }) {
             val existing = folderDao.byId(entry.id)
@@ -217,7 +260,7 @@ class FolderStateSynchronizer(
         tombstoneDao.upsert(
             state.deleted.map { FolderTombstoneEntity(it.id, chatId, it.deletedAt) }
         )
-        changed += folderMerger.mergeDuplicates(chatId)
+        changed += folderMerger.mergeDuplicates(chatId, markPending = markMergedDuplicates)
         val all = folderDao.allFolders(chatId)
         for (deletion in state.deleted) {
             val folder = all.firstOrNull { it.id == deletion.id } ?: continue
@@ -279,7 +322,10 @@ class FolderStateSynchronizer(
         return depth
     }
 
-    private suspend fun findStateDocuments(chatId: Long): List<RemoteDocument> {
+    private suspend fun findStateDocuments(
+        chatId: Long,
+        includeOlderBursts: Boolean = false
+    ): List<RemoteDocument> {
         val found = mutableListOf<RemoteDocument>()
         var fromMessageId = 0L
         var pages = 0
@@ -299,6 +345,7 @@ class FolderStateSynchronizer(
             if (page.nextFromMessageId == 0L) break
             fromMessageId = page.nextFromMessageId
         }
+        if (includeOlderBursts) return found.sortedByDescending { it.messageId }
         val newest = found.maxByOrNull { it.messageId } ?: return emptyList()
         return found
             .filter { newest.dateSeconds - it.dateSeconds <= SAME_BURST_SECONDS }
