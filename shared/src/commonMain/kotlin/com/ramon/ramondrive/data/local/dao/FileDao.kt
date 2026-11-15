@@ -9,6 +9,7 @@ import androidx.room.RawQuery
 import androidx.room.RoomRawQuery
 import androidx.room.Update
 import com.ramon.ramondrive.data.local.entity.AlbumSummary
+import com.ramon.ramondrive.data.local.entity.DuplicateGroupRow
 import com.ramon.ramondrive.data.local.entity.FileEntity
 import com.ramon.ramondrive.data.local.entity.FolderEntity
 import com.ramon.ramondrive.data.local.entity.HomeAggregates
@@ -190,6 +191,32 @@ interface FileDao {
 
     @Query("UPDATE files SET name = :name, modifiedAt = :modifiedAt WHERE id = :id")
     suspend fun rename(id: String, name: String, modifiedAt: Long)
+
+    @Query(
+        """SELECT folderId, name, sizeBytes, COUNT(*) AS fileCount
+             FROM files
+            WHERE chatId IS :chatId AND trashedAt IS NULL
+              AND isHidden = 0 AND isArchived = 0
+              AND sizeBytes > 0
+            GROUP BY folderId, name, sizeBytes
+           HAVING COUNT(*) > 1
+            ORDER BY sizeBytes * (COUNT(*) - 1) DESC"""
+    )
+    suspend fun duplicateGroups(chatId: Long?): List<DuplicateGroupRow>
+
+    @Query(
+        """SELECT * FROM files
+            WHERE chatId IS :chatId AND trashedAt IS NULL
+              AND sizeBytes = :sizeBytes AND name = :name
+              AND folderId IS :folderId
+            ORDER BY modifiedAt DESC"""
+    )
+    suspend fun duplicateMembers(
+        folderId: String?,
+        name: String,
+        sizeBytes: Long,
+        chatId: Long?
+    ): List<FileEntity>
 
     @Query("UPDATE files SET folderId = :folderId, modifiedAt = :modifiedAt WHERE id IN (:ids)")
     suspend fun move(ids: List<String>, folderId: String?, modifiedAt: Long)

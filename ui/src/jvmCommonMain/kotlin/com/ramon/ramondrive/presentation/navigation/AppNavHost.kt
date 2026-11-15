@@ -12,6 +12,7 @@ import com.ramon.ramondrive.resources.Res
 import com.ramon.ramondrive.resources.album_not_in_folder
 import com.ramon.ramondrive.presentation.channels.ChannelsScreen
 import com.ramon.ramondrive.presentation.collection.CollectionScreen
+import com.ramon.ramondrive.presentation.duplicates.DuplicatesScreen
 import com.ramon.ramondrive.presentation.files.FilesScreen
 import com.ramon.ramondrive.presentation.gallery.GalleryScreen
 import com.ramon.ramondrive.presentation.home.HomeScreen
@@ -190,6 +191,9 @@ fun AppNavHost(
         composable<Route.Trash> {
             TrashScreen(onBack = { navController.popBackStackOnce() })
         }
+        composable<Route.Duplicates> {
+            DuplicatesScreen(onBack = { navController.popBackStackOnce() })
+        }
         composable<Route.Settings> {
             UnderBottomBar {
                 SettingsScreen(
@@ -211,6 +215,7 @@ fun AppNavHost(
                 onBack = { navController.popBackStackOnce() },
                 onOpenExclusions = { navController.navigateOnce(Route.Exclusions) },
                 onOpenProxy = { navController.navigateOnce(Route.Proxy) },
+                onOpenDuplicates = { navController.navigateOnce(Route.Duplicates) },
                 onLoggedOut = {
                     navController.navigateOnce(Route.Onboarding) {
                         popUpTo(0) { inclusive = true }

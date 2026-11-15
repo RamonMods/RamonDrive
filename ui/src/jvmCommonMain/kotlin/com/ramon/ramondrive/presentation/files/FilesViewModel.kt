@@ -645,6 +645,22 @@ class FilesViewModel(
         }
     }
 
+    fun duplicateSelected() {
+        val ids = selection.value.toList()
+        clearSelection()
+        _copying.update { true }
+        viewModelScope.launch {
+            when (val result = fileRepository.copyFiles(ids, folderId)) {
+                is AppResult.Success -> _messages.tryEmit(
+                    UiText.Resource(Res.string.files_copied_all, result.value)
+                )
+
+                is AppResult.Failure -> _messages.tryEmit(result.error.toUiText())
+            }
+            _copying.update { false }
+        }
+    }
+
     suspend fun childFolders(parentId: String?): List<DriveFolder> =
         fileRepository.observeFolders(parentId, showHidden = true, showArchived = true).first()
 

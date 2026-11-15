@@ -206,6 +206,7 @@ import com.ramon.ramondrive.resources.files_nothing_here_yet
 import com.ramon.ramondrive.resources.files_only_files_verified_telegram
 import com.ramon.ramondrive.resources.files_rename_file
 import com.ramon.ramondrive.resources.files_bulk_rename
+import com.ramon.ramondrive.resources.files_duplicate
 import com.ramon.ramondrive.resources.files_rename_folder
 import com.ramon.ramondrive.resources.files_search
 import com.ramon.ramondrive.resources.files_share_destination_confirm
@@ -537,6 +538,12 @@ fun FilesScreen(
                                                     label = stringResource(Res.string.files_copy),
                                                     icon = Icons.Filled.ContentCopy
                                                 ) { showCopyPicker = true }
+                                            )
+                                            add(
+                                                MenuAction(
+                                                    label = stringResource(Res.string.files_duplicate),
+                                                    icon = Icons.Filled.ContentCopy
+                                                ) { viewModel.duplicateSelected() }
                                             )
                                         }
                                         if (storage.isNotEmpty()) {

@@ -52,6 +52,9 @@ sealed interface Route {
     data object Trash : Route
 
     @Serializable
+    data object Duplicates : Route
+
+    @Serializable
     data object Channels : Route
 
     @Serializable

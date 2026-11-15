@@ -3,6 +3,7 @@ package com.ramon.ramondrive.presentation.di
 import com.ramon.ramondrive.presentation.AppViewModel
 import com.ramon.ramondrive.presentation.channels.ChannelsViewModel
 import com.ramon.ramondrive.presentation.collection.CollectionViewModel
+import com.ramon.ramondrive.presentation.duplicates.DuplicatesViewModel
 import com.ramon.ramondrive.presentation.files.FileClipboard
 import com.ramon.ramondrive.presentation.files.FilesViewModel
 import com.ramon.ramondrive.presentation.gallery.GalleryViewModel
@@ -28,6 +29,7 @@ val sharedUiModule = module {
     viewModelOf(::PreviewViewModel)
     viewModelOf(::ChannelsViewModel)
     viewModelOf(::CollectionViewModel)
+    viewModelOf(::DuplicatesViewModel)
     viewModelOf(::FilesViewModel)
     viewModelOf(::GalleryViewModel)
     viewModelOf(::HomeViewModel)

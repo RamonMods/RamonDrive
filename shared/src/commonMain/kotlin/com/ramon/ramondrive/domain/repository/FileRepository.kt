@@ -5,6 +5,7 @@ import com.ramon.ramondrive.core.common.AppResult
 import com.ramon.ramondrive.core.files.LocalCleanup
 import com.ramon.ramondrive.domain.model.DriveFile
 import com.ramon.ramondrive.domain.model.DriveFolder
+import com.ramon.ramondrive.domain.model.DuplicateGroup
 import com.ramon.ramondrive.domain.model.FileQuerySpec
 import com.ramon.ramondrive.domain.model.FileSortField
 import com.ramon.ramondrive.domain.model.LinkMetadata
@@ -128,6 +129,9 @@ interface FileRepository {
     suspend fun linkPreview(url: String): LinkMetadata?
 
     suspend fun findDuplicate(localPath: String): DriveFile?
+
+    /** Groups of live files sharing folder, name and size. */
+    suspend fun duplicateGroups(): List<DuplicateGroup>
 
     suspend fun sweepImportOrphans()
 

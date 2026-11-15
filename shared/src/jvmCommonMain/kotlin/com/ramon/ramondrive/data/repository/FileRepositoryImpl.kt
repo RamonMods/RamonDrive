@@ -33,6 +33,7 @@ import com.ramon.ramondrive.data.remote.telegram.RemoteFileManifest
 import com.ramon.ramondrive.domain.model.BackupState
 import com.ramon.ramondrive.domain.model.DriveFile
 import com.ramon.ramondrive.domain.model.DriveFolder
+import com.ramon.ramondrive.domain.model.DuplicateGroup
 import com.ramon.ramondrive.domain.model.FileCategory
 import com.ramon.ramondrive.domain.model.FileQuerySpec
 import com.ramon.ramondrive.domain.model.FileSortField
@@ -654,8 +655,21 @@ class FileRepositoryImpl(
         return Markdown.plain(firstLine).take(NOTE_TITLE_LIMIT)
     }
 
-    override suspend fun findDuplicate(localPath: String): DriveFile? {
-        val source = File(localPath)
+    override suspend fun duplicateGroups(): List<DuplicateGroup> {
+        val chatId = activeChannel.id()
+        return fileDao.duplicateGroups(chatId).mapNotNull { row ->
+            val files = fileDao
+                .duplicateMembers(row.folderId, row.name, row.sizeBytes, chatId)
+                .map { it.toDomain() }
+            if (files.size > 1) {
+                DuplicateGroup(row.folderId, row.name, row.sizeBytes, files)
+            } else {
+                null
+            }
+        }
+    }
+
+    override suspend fun findDuplicate(localPath: String): DriveFile? {        val source = File(localPath)
         if (!source.exists() || !source.isFile) return null
 
         // Rows without a remote copy do not count, so an interrupted upload can be retried.

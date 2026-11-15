@@ -112,6 +112,8 @@ import com.ramon.ramondrive.resources.settings_hides_app_screenshots_screen
 import com.ramon.ramondrive.resources.settings_key_backup_stored
 import com.ramon.ramondrive.resources.settings_link_previews
 import com.ramon.ramondrive.resources.settings_link_previews_subtitle
+import com.ramon.ramondrive.resources.settings_find_duplicates
+import com.ramon.ramondrive.resources.settings_find_duplicates_subtitle
 import com.ramon.ramondrive.resources.settings_media_in_files
 import com.ramon.ramondrive.resources.settings_media_in_files_subtitle
 import com.ramon.ramondrive.resources.settings_local_copies_files_already
@@ -203,6 +205,7 @@ fun SettingsSectionScreen(
     onBack: () -> Unit,
     onOpenExclusions: () -> Unit,
     onOpenProxy: () -> Unit,
+    onOpenDuplicates: () -> Unit,
     onLoggedOut: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel()
 ) {
@@ -277,7 +280,8 @@ fun SettingsSectionScreen(
                 SettingsSectionType.STORAGE -> StorageSection(
                     state = state,
                     viewModel = viewModel,
-                    onClearCache = { confirmClearCache = true }
+                    onClearCache = { confirmClearCache = true },
+                    onOpenDuplicates = onOpenDuplicates
                 )
 
                 SettingsSectionType.PERMISSIONS ->
@@ -587,7 +591,8 @@ private fun BackupSection(
 private fun StorageSection(
     state: SettingsUiState,
     viewModel: SettingsViewModel,
-    onClearCache: () -> Unit
+    onClearCache: () -> Unit,
+    onOpenDuplicates: () -> Unit
 ) {
     val prefs = state.preferences
     val reclaimable by viewModel.reclaimableBytes.collectAsStateWithLifecycle()
@@ -725,6 +730,13 @@ private fun StorageSection(
                 title = stringResource(Res.string.settings_auto_clear_trash),
                 subtitle = trashDaysLabel(prefs.trashAutoClearDays),
                 onClick = { showTrashDialog = true }
+            )
+        }
+        add {
+            SettingsClickRow(
+                title = stringResource(Res.string.settings_find_duplicates),
+                subtitle = stringResource(Res.string.settings_find_duplicates_subtitle),
+                onClick = onOpenDuplicates
             )
         }
     }
