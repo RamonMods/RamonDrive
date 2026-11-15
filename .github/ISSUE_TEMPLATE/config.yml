@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and general help
+    url: https://github.com/RamonMods/RamonDrive/issues
+    about: Open an issue on GitHub for questions, bugs and feature requests.
+  - name: Telegram account or channel problems
+    url: https://telegram.org/support
+    about: RamonDrive cannot help with account limits, bans or lost channels. Contact Telegram.

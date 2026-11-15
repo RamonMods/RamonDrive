@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=RamonDrive
+Comment=Armazenamento em nuvem na sua conta do Telegram
+Exec=RamonDrive
+Icon=ramondrive
+Categories=Network;FileTransfer;
+Terminal=false

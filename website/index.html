@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RamonDrive · Um drive privado no seu próprio Telegram</title>
+<meta name="description" content="Drive em nuvem de código aberto que guarda seus arquivos em um canal privado na sua própria conta do Telegram. Sem limite de tamanho de arquivo, criptografia opcional, Android e desktop.">
+<meta name="theme-color" content="#0f172a">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://ramonmods.github.io/RamonDrive/">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/icon-64.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="sitemap" type="application/xml" href="sitemap.xml">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="RamonDrive">
+<meta property="og:title" content="RamonDrive · Um drive privado no seu próprio Telegram">
+<meta property="og:description" content="Faça backup e navegue pelos seus arquivos usando um canal privado do Telegram como armazenamento. Sem servidor, sem limite de tamanho, criptografia opcional.">
+<meta property="og:url" content="https://ramonmods.github.io/RamonDrive/">
+<meta property="og:image" content="https://ramonmods.github.io/RamonDrive/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Logotipo do RamonDrive com a frase: Um drive em nuvem, guardado no seu próprio Telegram.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RamonDrive · Um drive privado no seu próprio Telegram">
+<meta name="twitter:description" content="Faça backup e navegue pelos seus arquivos usando um canal privado do Telegram como armazenamento. Sem servidor, sem limite de tamanho, criptografia opcional.">
+<meta name="twitter:image" content="https://ramonmods.github.io/RamonDrive/assets/og.png">
+<meta name="twitter:image:alt" content="Logotipo do RamonDrive com a frase: Um drive em nuvem, guardado no seu próprio Telegram.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="preload" href="data/releases.json" as="fetch" type="application/json" crossorigin>
+<script>document.documentElement.classList.add("js")</script>
+<script src="app.js" defer></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "RamonDrive",
+  "description": "Faça backup e navegue pelos seus arquivos usando um canal privado na sua própria conta do Telegram como armazenamento. Sem limite de tamanho de arquivo, criptografia AES-256-GCM opcional, sem servidor no meio.",
+  "applicationCategory": "UtilitiesApplication",
+  "applicationSubCategory": "Armazenamento em nuvem",
+  "operatingSystem": "Android 8.0+, Windows 10+, Linux x86_64, macOS (Apple Silicon)",
+  "softwareVersion": "1.0.0",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "url": "https://ramonmods.github.io/RamonDrive/",
+  "downloadUrl": "https://github.com/RamonMods/RamonDrive/releases/latest",
+  "installUrl": "https://github.com/RamonMods/RamonDrive/releases/latest",
+  "image": "https://ramonmods.github.io/RamonDrive/assets/icon-192.png",
+  "screenshot": [
+    "https://ramonmods.github.io/RamonDrive/assets/screens/1-900.webp",
+    "https://ramonmods.github.io/RamonDrive/assets/screens/2-900.webp",
+    "https://ramonmods.github.io/RamonDrive/assets/screens/3-900.webp",
+    "https://ramonmods.github.io/RamonDrive/assets/screens/4-900.webp"
+  ],
+  "featureList": [
+    "Backup automático de fotos e pastas",
+    "Sem limite de tamanho de arquivo",
+    "Criptografia AES-256-GCM opcional",
+    "Streaming de vídeo e áudio",
+    "Pré-visualização de imagens, PDFs, textos e arquivos ZIP",
+    "Vários drives em uma única conta do Telegram"
+  ],
+  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+  "isAccessibleForFree": true,
+  "author": { "@type": "Person", "name": "Ramon", "url": "https://github.com/RamonMods" },
+  "sameAs": ["https://github.com/RamonMods/RamonDrive"]
+}
+</script>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-android" viewBox="0 0 24 24"><path fill="currentColor" d="M18.4395 5.5586c-.675 1.1664-1.352 2.3318-2.0274 3.498-.0366-.0155-.0742-.0286-.1113-.043-1.8249-.6957-3.484-.8-4.42-.787-1.8551.0185-3.3544.4643-4.2597.8203-.084-.1494-1.7526-3.021-2.0215-3.4864a1.1451 1.1451 0 0 0-.1406-.1914c-.3312-.364-.9054-.4859-1.379-.203-.475.282-.7136.9361-.3886 1.5019 1.9466 3.3696-.0966-.2158 1.9473 3.3593.0172.031-.4946.2642-1.3926 1.0177C2.8987 12.176.452 14.772 0 18.9902h24c-.119-1.1108-.3686-2.099-.7461-3.0683-.7438-1.9118-1.8435-3.2928-2.7402-4.1836a12.1048 12.1048 0 0 0-2.1309-1.6875c.6594-1.122 1.312-2.2559 1.9649-3.3848.2077-.3615.1886-.7956-.0079-1.1191a1.1001 1.1001 0 0 0-.8515-.5332c-.5225-.0536-.9392.3128-1.0488.5449zm-.0391 8.461c.3944.5926.324 1.3306-.1563 1.6503-.4799.3197-1.188.0985-1.582-.4941-.3944-.5927-.324-1.3307.1563-1.6504.4727-.315 1.1812-.1086 1.582.4941zM7.207 13.5273c.4803.3197.5506 1.0577.1563 1.6504-.394.5926-1.1038.8138-1.584.4941-.48-.3197-.5503-1.0577-.1563-1.6504.4008-.6021 1.1087-.8106 1.584-.4941z"/></symbol>
+  <symbol id="i-windows" viewBox="0 0 24 24"><path fill="currentColor" d="M0 3.449 9.75 2.1v9.451H0zm10.949-1.501L24 0v11.4H10.949zM0 12.6h9.75v9.451L0 20.699zm10.949 0H24V24l-13.051-1.801z"/></symbol>
+  <symbol id="i-linux" viewBox="0 0 24 24"><path fill="currentColor" d="M17.61.455a3.41 3.41 0 0 0-3.41 3.41 3.41 3.41 0 0 0 3.41 3.41 3.41 3.41 0 0 0 3.41-3.41 3.41 3.41 0 0 0-3.41-3.41zM12.92.8C8.923.777 5.137 2.941 3.148 6.451a4.5 4.5 0 0 1 .26-.007 4.92 4.92 0 0 1 2.585.737A8.316 8.316 0 0 1 12.688 3.6 4.944 4.944 0 0 1 13.723.834 11.008 11.008 0 0 0 12.92.8zm9.226 4.994a4.915 4.915 0 0 1-1.918 2.246 8.36 8.36 0 0 1-.273 8.303 4.89 4.89 0 0 1 1.632 2.54 11.156 11.156 0 0 0 .559-13.089zM3.41 7.932A3.41 3.41 0 0 0 0 11.342a3.41 3.41 0 0 0 3.41 3.409 3.41 3.41 0 0 0 3.41-3.41 3.41 3.41 0 0 0-3.41-3.41zm2.027 7.866a4.908 4.908 0 0 1-2.915.358 11.1 11.1 0 0 0 7.991 6.698 11.234 11.234 0 0 0 2.422.249 4.879 4.879 0 0 1-.999-2.85 8.484 8.484 0 0 1-.836-.136 8.304 8.304 0 0 1-5.663-4.32zm11.405.928a3.41 3.41 0 0 0-3.41 3.41 3.41 3.41 0 0 0 3.41 3.41 3.41 3.41 0 0 0 3.41-3.41 3.41 3.41 0 0 0-3.41-3.41z"/></symbol>
+  <symbol id="i-macos" viewBox="0 0 24 24"><path fill="currentColor" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 16.5h4"/></g></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5v-3a4 4 0 0 1 8 0v3"/><path d="M12 14.5v2"/></g></symbol>
+  <symbol id="i-parts" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="16" height="4.5" rx="1.2"/><rect x="4" y="10" width="16" height="4.5" rx="1.2"/><rect x="4" y="16.5" width="9" height="4.5" rx="1.2"/></g></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 3 10.4l7.2 2.4L12.6 20z"/><path d="M21 3 10.2 12.8"/></g></symbol>
+  <symbol id="i-devices" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="13" height="9.5" rx="1.5"/><path d="M1 18h16"/><rect x="17.5" y="8" width="5" height="11" rx="1.2"/></g></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5V5.5a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/></g></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12"/><path d="m6.5 11 5.5 5.5 5.5-5.5"/><path d="M5 20h14"/></g></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 6 6 6-6 6"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Ir para o conteúdo</a>
+
+<header class="bar" data-bar>
+  <div class="bar__inner wrap">
+    <a class="brand" href="#top" aria-label="RamonDrive — início">
+      <img class="brand__mark" src="assets/icon-64.png" width="32" height="32" alt="">
+      <span class="brand__name">RamonDrive</span>
+    </a>
+    <nav class="bar__end" aria-label="Principal">
+      <a class="chip" href="https://github.com/RamonMods/RamonDrive/releases/latest" data-release-link>
+        <span class="chip__dot" aria-hidden="true"></span>
+        <span data-bind="version">Mais recente</span>
+      </a>
+      <a class="bar__link" href="https://github.com/RamonMods/RamonDrive">
+        <svg class="icon" aria-hidden="true"><use href="#i-github"/></svg>
+        <span class="bar__link-label">Código-fonte</span>
+      </a>
+      <a class="btn btn--primary btn--small bar__cta" href="#download">Baixar</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <div class="hero__grid wrap">
+      <h1 class="hero__title reveal" style="--i: 0" id="hero-title">Um drive em nuvem, guardado no seu próprio Telegram.</h1>
+      <div class="hero__side reveal" style="--i: 1">
+        <p class="hero__lede">O RamonDrive faz backup e organiza seus arquivos em um canal privado na sua conta do Telegram. Não existe servidor do RamonDrive, nenhuma conta para criar com a gente, e a criptografia está a um interruptor de distância.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--large" href="#download" data-hero-cta>
+            <svg class="icon" aria-hidden="true"><use href="#i-android"/></svg>
+            <span>Baixar para Android</span>
+          </a>
+          <a class="btn btn--quiet btn--large" href="#download">Outras plataformas</a>
+        </div>
+        <p class="hero__meta">
+          <span data-hero-meta>Grátis e de código aberto</span>
+          <span class="hero__meta-sep" aria-hidden="true">·</span>
+          <span>Apache 2.0</span>
+        </p>
+      </div>
+    </div>
+
+    <figure class="route wrap reveal" style="--i: 2" aria-labelledby="route-caption">
+      <figcaption><h2 class="route__caption" id="route-caption">O caminho que um arquivo percorre</h2></figcaption>
+      <div class="route__track" aria-hidden="true">
+        <span class="route__flight"><svg class="icon"><use href="#i-plane"/></svg></span>
+      </div>
+      <ol class="route__list">
+        <li class="route__node" style="--i: 3">
+          <span class="route__icon"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg></span>
+          <h3 class="route__title">No seu dispositivo</h3>
+          <p class="route__text">Fotos, pastas escolhidas ou qualquer coisa que você envie pela folha de compartilhamento.</p>
+          <span class="route__tag">IMG_4127.MOV</span>
+        </li>
+        <li class="route__node" style="--i: 4">
+          <span class="route__icon"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span>
+          <h3 class="route__title">Selado, se você quiser</h3>
+          <p class="route__text">AES-256-GCM sobre os bytes, o nome, a legenda e a árvore de pastas.</p>
+          <span class="route__tag">opcional</span>
+        </li>
+        <li class="route__node" style="--i: 5">
+          <span class="route__icon"><svg class="icon" aria-hidden="true"><use href="#i-parts"/></svg></span>
+          <h3 class="route__title">Dividido além do limite</h3>
+          <p class="route__text">Qualquer coisa maior do que uma mensagem do Telegram permite sobe em partes.</p>
+          <span class="route__tag">sem limite de tamanho</span>
+        </li>
+        <li class="route__node" style="--i: 6">
+          <span class="route__icon"><svg class="icon" aria-hidden="true"><use href="#i-plane"/></svg></span>
+          <h3 class="route__title">Seu canal privado</h3>
+          <p class="route__text">Ele vive na sua conta. As legendas carregam o manifesto que reconstrói o drive.</p>
+          <span class="route__tag">é seu</span>
+        </li>
+        <li class="route__node" style="--i: 7">
+          <span class="route__icon"><svg class="icon" aria-hidden="true"><use href="#i-devices"/></svg></span>
+          <h3 class="route__title">De volta em qualquer dispositivo</h3>
+          <p class="route__text">Android, Windows, Linux e macOS navegam pelo mesmo drive.</p>
+          <span class="route__tag">um drive</span>
+        </li>
+      </ol>
+    </figure>
+  </section>
+
+  <section class="screens" id="app" aria-labelledby="screens-title">
+    <div class="wrap screens__head">
+      <h2 class="section-title" id="screens-title">Quatro abas, um drive.</h2>
+      <p class="section-lede">Início, Arquivos, Galeria e Configurações. Os apps de celular e desktop compartilham uma única interface, então nada se move quando você troca.</p>
+    </div>
+    <ul class="screens__strip wrap" tabindex="0" aria-label="Capturas de tela do app">
+      <li class="screens__item">
+        <figure>
+          <img src="assets/screens/1-480.webp" srcset="assets/screens/1-480.webp 480w, assets/screens/1-900.webp 900w" sizes="(min-width: 64rem) 22vw, 68vw" width="900" height="1600" loading="lazy" decoding="async" alt="Aba Início mostrando o status do backup, arquivos recentes e o armazenamento dividido por tipo">
+          <figcaption>Início</figcaption>
+        </figure>
+      </li>
+      <li class="screens__item">
+        <figure>
+          <img src="assets/screens/2-480.webp" srcset="assets/screens/2-480.webp 480w, assets/screens/2-900.webp 900w" sizes="(min-width: 64rem) 22vw, 68vw" width="900" height="1600" loading="lazy" decoding="async" alt="Aba Arquivos com pastas acima de uma grade de arquivos de imagem">
+          <figcaption>Arquivos</figcaption>
+        </figure>
+      </li>
+      <li class="screens__item">
+        <figure>
+          <img src="assets/screens/3-480.webp" srcset="assets/screens/3-480.webp 480w, assets/screens/3-900.webp 900w" sizes="(min-width: 64rem) 22vw, 68vw" width="900" height="1600" loading="lazy" decoding="async" alt="Aba Galeria com uma grade de fotos agrupadas por dia">
+          <figcaption>Galeria</figcaption>
+        </figure>
+      </li>
+      <li class="screens__item">
+        <figure>
+          <img src="assets/screens/4-480.webp" srcset="assets/screens/4-480.webp 480w, assets/screens/4-900.webp 900w" sizes="(min-width: 64rem) 22vw, 68vw" width="900" height="1600" loading="lazy" decoding="async" alt="Aba Configurações listando opções de conta, backup, armazenamento, segurança, aparência e reprodução">
+          <figcaption>Configurações</figcaption>
+        </figure>
+      </li>
+    </ul>
+  </section>
+
+  <section class="features" id="features" aria-labelledby="features-title">
+    <div class="wrap features__grid">
+      <div class="features__intro">
+        <h2 class="section-title" id="features-title">Tudo o que um drive deveria fazer.</h2>
+        <p class="section-lede">Backup, navegação, reprodução e compartilhamento, rodando no armazenamento que você já tem.</p>
+        <div class="features__lead">
+          <p class="features__lead-title">Sem limite de tamanho de arquivo</p>
+          <p>Um vídeo de 20 GB é um único arquivo no app, não importa o limite que o Telegram imponha a cada mensagem. O RamonDrive guarda as partes e as junta novamente.</p>
+        </div>
+      </div>
+      <dl class="features__list">
+        <div class="feature">
+          <dt>Backup automático</dt>
+          <dd>Fotos e pastas escolhidas são enviadas sozinhas no Android, com agendamentos, regras de Wi-Fi e carregamento, e padrões de exclusão.</dd>
+        </div>
+        <div class="feature">
+          <dt>Streaming</dt>
+          <dd>Vídeos e áudios tocam direto do Telegram, com avanço na linha do tempo, inclusive arquivos criptografados.</dd>
+        </div>
+        <div class="feature">
+          <dt>Pré-visualização integrada</dt>
+          <dd>Imagens, PDFs, textos e o conteúdo de arquivos ZIP abrem sem precisar baixar.</dd>
+        </div>
+        <div class="feature">
+          <dt>Gerenciamento de arquivos de verdade</dt>
+          <dd>Pastas, favoritos, itens ocultos e arquivados, lixeira e ações em massa.</dd>
+        </div>
+        <div class="feature">
+          <dt>Vários drives</dt>
+          <dd>Canais separados para pessoal, trabalho ou fotos, todos em uma única conta.</dd>
+        </div>
+        <div class="feature">
+          <dt>Folha de compartilhamento</dt>
+          <dd>Envie arquivos de qualquer app do Android. Bytes idênticos nunca são enviados duas vezes.</dd>
+        </div>
+        <div class="feature">
+          <dt>Transferências que resistem</dt>
+          <dd>Uma fila paralela com pausa e retomada que continua depois de reiniciar o aparelho.</dd>
+        </div>
+        <div class="feature">
+          <dt>Traga os arquivos que você já tem</dt>
+          <dd>Encaminhe documentos de qualquer conversa para o canal do seu drive. O Telegram os copia no servidor, então nada é baixado de novo.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="privacy" id="privacy" aria-labelledby="privacy-title">
+    <div class="wrap privacy__grid">
+      <div class="privacy__statement">
+        <h2 class="section-title" id="privacy-title">O que um estranho veria.</h2>
+        <p class="privacy__big">Com a criptografia ativada, alguém que leia seu canal sem a sua chave descobre a quantidade de arquivos, os tamanhos e os horários. <span class="privacy__em">Nada além disso.</span></p>
+        <p class="privacy__note">A frase de recuperação não tem caminho de redefinição. É essa a ideia: defina uma dica ao criá-la e mantenha a frase fora da dica.</p>
+      </div>
+      <dl class="layers">
+        <div class="layer">
+          <dt>No dispositivo</dt>
+          <dd>Os bancos de dados do app e do Telegram são selados com uma chave aleatória protegida pela plataforma: Android Keystore, Windows DPAPI ou um arquivo de chave local no Linux e no macOS. Miniaturas e caches são criptografados por padrão.</dd>
+        </div>
+        <div class="layer">
+          <dt>No Telegram</dt>
+          <dd>Apenas bytes selados, nomes de arquivo aleatórios, legendas criptografadas e uma árvore de pastas criptografada.</dd>
+        </div>
+        <div class="layer">
+          <dt>Guarda da chave</dt>
+          <dd>As chaves de conteúdo são aleatórias, protegidas pela chave mestra da plataforma e nunca saem do dispositivo desprotegidas.</dd>
+        </div>
+        <div class="layer">
+          <dt>Recuperação</dt>
+          <dd>A chave de conteúdo é copiada para o seu canal, selada com a sua frase (PBKDF2, 310 mil iterações). Restaure-a em um novo dispositivo e tudo é desbloqueado.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="download" id="download" aria-labelledby="download-title">
+    <div class="wrap">
+      <div class="download__head">
+        <h2 class="section-title" id="download-title">Obtenha o RamonDrive.</h2>
+        <dl class="stats" data-needs-data>
+          <div class="stat">
+            <dt>Última versão</dt>
+            <dd><a href="https://github.com/RamonMods/RamonDrive/releases/latest" data-release-link><span data-bind="version"></span></a> <span class="stat__sub" data-bind="released"></span></dd>
+          </div>
+          <div class="stat">
+            <dt>Downloads, todas as versões</dt>
+            <dd data-bind="total"></dd>
+          </div>
+          <div class="stat">
+            <dt>Estrelas no GitHub</dt>
+            <dd data-bind="stars"></dd>
+          </div>
+        </dl>
+      </div>
+
+      <article class="featured" data-platform="android" aria-labelledby="p-android">
+        <div class="featured__main">
+          <header class="featured__head">
+            <svg class="featured__icon" aria-hidden="true"><use href="#i-android"/></svg>
+            <div>
+              <h3 class="featured__name" id="p-android">Android<span class="tag tag--yours">Seu sistema</span></h3>
+              <p class="featured__req">Android 8.0 ou mais recente · o app principal do RamonDrive</p>
+            </div>
+          </header>
+          <div class="featured__cta">
+            <a class="btn btn--primary btn--large" href="https://github.com/RamonMods/RamonDrive/releases/latest" data-slot="link">
+              <svg class="icon" aria-hidden="true"><use href="#i-down"/></svg><span>Baixar APK</span>
+            </a>
+            <p class="featured__file"><span data-slot="file">build arm64-v8a</span> <span class="featured__size" data-slot="size"></span></p>
+          </div>
+          <p class="featured__hint">O build arm64 serve em quase todos os celulares dos últimos anos. O backup automático de fotos e a folha de compartilhamento existem apenas no Android.</p>
+          <p class="featured__count" data-needs-data><span data-slot="count"></span> downloads no Android</p>
+        </div>
+        <div class="featured__side">
+          <h4 class="featured__side-title">Outros builds para Android</h4>
+          <ul class="variants__list" data-slot="variants"></ul>
+        </div>
+      </article>
+
+      <div class="desktop">
+        <h3 class="desktop__title">Desktop</h3>
+        <ul class="builds">
+          <li class="build" data-platform="windows">
+            <svg class="build__icon" aria-hidden="true"><use href="#i-windows"/></svg>
+            <div class="build__name">
+              <h4 class="build__title" id="b-windows">Windows<span class="tag tag--yours">Seu sistema</span></h4>
+              <p class="build__req">Windows 10 ou mais recente, 64 bits</p>
+            </div>
+            <p class="build__file"><span data-slot="file">Instalador</span> <span class="build__size" data-slot="size"></span></p>
+            <p class="build__count" data-needs-data><span data-slot="count"></span> downloads</p>
+            <div class="build__actions">
+              <button class="build__more" type="button" aria-expanded="false" aria-controls="notes-windows">
+                <span>Notas de instalação</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+              </button>
+              <a class="btn btn--primary btn--small" href="https://github.com/RamonMods/RamonDrive/releases/latest" data-slot="link" aria-describedby="b-windows">
+                <svg class="icon" aria-hidden="true"><use href="#i-down"/></svg><span>Baixar</span>
+              </a>
+            </div>
+            <div class="build__notes" id="notes-windows" hidden>
+              <div class="build__notes-inner"><p>Instala para o seu usuário sem pedir administrador e é desinstalado pelas Configurações do Windows. Sua sessão em %APPDATA%\RamonDrive sobrevive às reinstalações.</p></div>
+            </div>
+          </li>
+          <li class="build" data-platform="macos">
+            <svg class="build__icon" aria-hidden="true"><use href="#i-macos"/></svg>
+            <div class="build__name">
+              <h4 class="build__title" id="b-macos">macOS<span class="tag tag--yours">Seu sistema</span></h4>
+              <p class="build__req">Apple Silicon</p>
+            </div>
+            <p class="build__file"><span data-slot="file">Imagem de disco</span> <span class="build__size" data-slot="size"></span></p>
+            <p class="build__count" data-needs-data><span data-slot="count"></span> downloads</p>
+            <div class="build__actions">
+              <button class="build__more" type="button" aria-expanded="false" aria-controls="notes-macos">
+                <span>Notas de instalação</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+              </button>
+              <a class="btn btn--primary btn--small" href="https://github.com/RamonMods/RamonDrive/releases/latest" data-slot="link" aria-describedby="b-macos">
+                <svg class="icon" aria-hidden="true"><use href="#i-down"/></svg><span>Baixar</span>
+              </a>
+            </div>
+            <div class="build__notes" id="notes-macos" hidden>
+              <div class="build__notes-inner"><p>Abra a imagem de disco e arraste o RamonDrive para Aplicativos. O app não é assinado com um Apple Developer ID, então remova a marca de quarentena uma vez e ele abrirá normalmente daí em diante.</p>
+                <div class="cmd">
+                  <code>xattr -dr com.apple.quarantine /Applications/RamonDrive.app</code>
+                  <button class="cmd__copy" type="button" data-copy aria-label="Copiar comando de quarentena">
+                    <svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg><span data-copy-label>Copiar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="build" data-platform="linux">
+            <svg class="build__icon" aria-hidden="true"><use href="#i-linux"/></svg>
+            <div class="build__name">
+              <h4 class="build__title" id="b-linux">Linux<span class="tag tag--yours">Seu sistema</span></h4>
+              <p class="build__req">Qualquer distro, x86_64</p>
+            </div>
+            <p class="build__file"><span data-slot="file">AppImage</span> <span class="build__size" data-slot="size"></span></p>
+            <p class="build__count" data-needs-data><span data-slot="count"></span> downloads</p>
+            <div class="build__actions">
+              <button class="build__more" type="button" aria-expanded="false" aria-controls="notes-linux">
+                <span>Notas de instalação</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+              </button>
+              <a class="btn btn--primary btn--small" href="https://github.com/RamonMods/RamonDrive/releases/latest" data-slot="link" aria-describedby="b-linux">
+                <svg class="icon" aria-hidden="true"><use href="#i-down"/></svg><span>Baixar</span>
+              </a>
+            </div>
+            <div class="build__notes" id="notes-linux" hidden>
+              <div class="build__notes-inner">
+                <div data-slot="appimage-note"><p>A maioria das distros de 2022 em diante. Nada mais para instalar.</p>
+                  <div class="cmd">
+                    <code data-slot="command">chmod +x RamonDrive-&lt;version&gt;-x86_64.AppImage &amp;&amp; ./RamonDrive-&lt;version&gt;-x86_64.AppImage</code>
+                    <button class="cmd__copy" type="button" data-copy aria-label="Copiar comando de execução">
+                      <svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg><span data-copy-label>Copiar</span>
+                    </button>
+                  </div>
+                </div>
+                <p>Ou o .deb no Ubuntu 24.04, Debian 13 ou mais recente:</p>
+                <div class="cmd">
+                  <code data-slot="deb-command">sudo apt install ./ramondrive_&lt;version&gt;_amd64.deb</code>
+                  <button class="cmd__copy" type="button" data-copy aria-label="Copiar comando de instalação">
+                    <svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg><span data-copy-label>Copiar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <details class="others" data-others hidden>
+        <summary>Outros arquivos desta versão <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <div class="others__body">
+          <ul class="others__list" data-slot="others"></ul>
+        </div>
+      </details>
+
+      <p class="download__foot">Changelogs e todas as versões anteriores ficam na <a href="https://github.com/RamonMods/RamonDrive/releases">página de releases</a>. Prefere compilar você mesmo? O <a href="https://github.com/RamonMods/RamonDrive#getting-started">README</a> tem os passos.</p>
+    </div>
+  </section>
+
+  <section class="start" id="start" aria-labelledby="start-title">
+    <div class="wrap start__grid">
+      <div class="start__intro">
+        <h2 class="section-title" id="start-title">Funcionando em quatro passos.</h2>
+        <p class="section-lede">Você precisa de uma conta do Telegram e de um par de credenciais de API, que o Telegram distribui gratuitamente.</p>
+      </div>
+      <ol class="steps">
+        <li class="step">
+          <h3 class="step__title">Obtenha suas credenciais de API</h3>
+          <p>Entre em <a href="https://my.telegram.org">my.telegram.org</a>, abra as ferramentas de desenvolvimento de API e crie um app. Qualquer nome serve. Guarde o api_id e o api_hash exibidos.</p>
+        </li>
+        <li class="step">
+          <h3 class="step__title">Informe-as no RamonDrive</h3>
+          <p>Elas são guardadas criptografadas no dispositivo, nunca vão para logs e só são enviadas ao Telegram. Como são suas, o limite de uso de outra pessoa não afeta você.</p>
+        </li>
+        <li class="step">
+          <h3 class="step__title">Entre na conta</h3>
+          <p>Use seu número de telefone e o código de acesso, ou um QR code. Com o Telegram no mesmo dispositivo, basta um toque em Confirmar no Telegram.</p>
+        </li>
+        <li class="step">
+          <h3 class="step__title">Escolha o que salvar em backup</h3>
+          <p>Selecione pastas e ative Criptografar uploads com uma frase de recuperação se quiser o canal selado.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="faq" id="faq" aria-labelledby="faq-title">
+    <div class="wrap faq__grid">
+      <h2 class="section-title" id="faq-title">Antes de instalar.</h2>
+      <div class="faq__list">
+        <details class="qa">
+          <summary>O Telegram limita quanto eu posso armazenar?<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="qa__body"><p>O Telegram não limita o tamanho total de um canal. Mensagens individuais têm um limite de tamanho, e o RamonDrive contorna isso guardando um arquivo grande como várias mensagens. Aberto no app do Telegram, esse arquivo aparece como partes; só o RamonDrive o remonta.</p></div>
+        </details>
+        <details class="qa">
+          <summary>O Telegram consegue ler meus arquivos?<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="qa__body"><p>Sem criptografia, seus arquivos ficam no seu canal privado como qualquer outro upload. Com Criptografar uploads ativado, o canal guarda apenas bytes selados, nomes aleatórios, legendas criptografadas e uma árvore de pastas criptografada.</p></div>
+        </details>
+        <details class="qa">
+          <summary>O que acontece se eu perder meu celular?<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="qa__body"><p>Instale o RamonDrive em outro dispositivo, entre na conta, digite sua frase de recuperação e o drive inteiro volta, com pastas e tudo.</p></div>
+        </details>
+        <details class="qa">
+          <summary>Por que preciso do meu próprio API ID?<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="qa__body"><p>Credenciais compartilhadas somam o uso de todo mundo, então um usuário pesado pode fazer o app inteiro ser limitado. Seu próprio par mantém seu tráfego separado, e ele nunca é embutido no app nem enviado a lugar nenhum além do Telegram.</p></div>
+        </details>
+        <details class="qa">
+          <summary>Posso assistir sem baixar antes?<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="qa__body"><p>Sim. Vídeos e áudios tocam conforme chegam, e você pode avançar livremente. O streaming verifica os quadros que reproduz; um download completo verifica cada byte, então use-o quando a integridade importar mais do que começar rápido.</p></div>
+        </details>
+        <details class="qa">
+          <summary>O RamonDrive é feito pelo Telegram?<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="qa__body"><p>Não. É um projeto independente de código aberto construído sobre o TDLib, a biblioteca oficial de cliente do Telegram, e não é afiliado nem endossado pelo Telegram.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <div class="foot__top">
+      <p class="foot__statement">Seus arquivos, no seu canal, sem nenhum servidor no meio.</p>
+      <img class="foot__mark" src="assets/icon-192.png" width="96" height="96" alt="" loading="lazy">
+    </div>
+    <ul class="foot__links">
+      <li><a href="https://github.com/RamonMods/RamonDrive">Código-fonte</a></li>
+      <li><a href="https://github.com/RamonMods/RamonDrive/releases">Versões</a></li>
+      <li><a href="https://github.com/RamonMods/RamonDrive/issues">Relatar um problema</a></li>
+      <li><a href="https://github.com/RamonMods/RamonDrive/blob/master/LICENSE">Apache 2.0</a></li>
+      <li><a href="https://pixgg.com/ramon">Apoie o projeto</a></li>
+    </ul>
+    <p class="foot__fine">O RamonDrive é um projeto independente, não afiliado nem endossado pelo Telegram.</p>
+  </div>
+</footer>
+</body>
+</html>
