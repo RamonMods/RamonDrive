@@ -124,6 +124,8 @@ class SettingsRepositoryImpl(
             showHiddenFiles = this[PreferenceKeys.SHOW_HIDDEN_FILES] ?: defaults.showHiddenFiles,
             showArchivedFiles = this[PreferenceKeys.SHOW_ARCHIVED_FILES]
                 ?: defaults.showArchivedFiles,
+            showMediaInFiles = this[PreferenceKeys.SHOW_MEDIA_IN_FILES]
+                ?: defaults.showMediaInFiles,
             showRecentFiles = this[PreferenceKeys.SHOW_RECENT_FILES] ?: defaults.showRecentFiles,
             linkPreviews = this[PreferenceKeys.LINK_PREVIEWS] ?: defaults.linkPreviews,
             updateCheckEnabled = this[PreferenceKeys.UPDATE_CHECK_ENABLED]
@@ -208,6 +210,7 @@ class SettingsRepositoryImpl(
         this[PreferenceKeys.LAYOUT_DENSITY] = prefs.layoutDensity.name
         this[PreferenceKeys.SHOW_HIDDEN_FILES] = prefs.showHiddenFiles
         this[PreferenceKeys.SHOW_ARCHIVED_FILES] = prefs.showArchivedFiles
+        this[PreferenceKeys.SHOW_MEDIA_IN_FILES] = prefs.showMediaInFiles
         this[PreferenceKeys.SHOW_RECENT_FILES] = prefs.showRecentFiles
         this[PreferenceKeys.LINK_PREVIEWS] = prefs.linkPreviews
         this[PreferenceKeys.UPDATE_CHECK_ENABLED] = prefs.updateCheckEnabled

@@ -419,6 +419,7 @@
     <string name="gallery_no_media">没有媒体文件</string>
     <string name="gallery_photos_videos_appear_here">导入或备份后，照片和视频会显示在这里。</string>
     <string name="gallery_tab_albums">相册</string>
+    <string name="gallery_tab_audio">音频</string>
     <string name="gallery_tab_all">全部</string>
     <string name="gallery_tab_photos">照片</string>
     <string name="gallery_tab_videos">视频</string>
@@ -706,6 +707,8 @@
 
     <!-- Settings: appearance -->
     <string name="settings_archived_shortcut">已归档快捷入口</string>
+    <string name="settings_media_in_files">文件中的照片和视频</string>
+    <string name="settings_media_in_files_subtitle">在文件列表中显示照片、视频和音频。关闭后仅在相册中显示。</string>
     <string name="settings_compact_layout">紧凑布局</string>
     <string name="settings_dynamic_color">动态配色</string>
     <string name="settings_gallery_grid_columns">图库网格列数</string>

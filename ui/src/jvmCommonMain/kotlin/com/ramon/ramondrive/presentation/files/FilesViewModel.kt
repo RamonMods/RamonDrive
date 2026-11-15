@@ -15,6 +15,7 @@ import com.ramon.ramondrive.core.files.MimeTypes
 import com.ramon.ramondrive.core.files.PendingShare
 import com.ramon.ramondrive.domain.model.DriveFile
 import com.ramon.ramondrive.domain.model.DriveFolder
+import com.ramon.ramondrive.domain.model.FileCategory
 import com.ramon.ramondrive.domain.model.FileQuerySpec
 import com.ramon.ramondrive.domain.model.FileSortField
 import com.ramon.ramondrive.domain.model.SortDirection
@@ -179,6 +180,11 @@ class FilesViewModel(
                 filterByFolder = true,
                 showHidden = folder?.isHidden == true,
                 showArchived = folder?.isArchived == true,
+                excludedCategories = if (prefs.showMediaInFiles) {
+                    emptyList()
+                } else {
+                    listOf(FileCategory.IMAGE, FileCategory.VIDEO, FileCategory.AUDIO)
+                },
                 sortField = prefs.sortField,
                 sortDirection = prefs.sortDirection
             )

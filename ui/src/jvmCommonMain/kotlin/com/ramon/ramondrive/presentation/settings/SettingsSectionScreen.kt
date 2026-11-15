@@ -112,6 +112,8 @@ import com.ramon.ramondrive.resources.settings_hides_app_screenshots_screen
 import com.ramon.ramondrive.resources.settings_key_backup_stored
 import com.ramon.ramondrive.resources.settings_link_previews
 import com.ramon.ramondrive.resources.settings_link_previews_subtitle
+import com.ramon.ramondrive.resources.settings_media_in_files
+import com.ramon.ramondrive.resources.settings_media_in_files_subtitle
 import com.ramon.ramondrive.resources.settings_local_copies_files_already
 import com.ramon.ramondrive.resources.settings_log
 import com.ramon.ramondrive.resources.settings_log_telegram
@@ -1088,6 +1090,16 @@ private fun AppearanceSection(state: SettingsUiState, viewModel: SettingsViewMod
                 checked = prefs.showArchivedFiles,
                 onChange = { value ->
                     viewModel.update { it.copy(showArchivedFiles = value) }
+                }
+            )
+        }
+        add {
+            SettingsSwitchRow(
+                title = stringResource(Res.string.settings_media_in_files),
+                subtitle = stringResource(Res.string.settings_media_in_files_subtitle),
+                checked = prefs.showMediaInFiles,
+                onChange = { value ->
+                    viewModel.update { it.copy(showMediaInFiles = value) }
                 }
             )
         }

@@ -433,6 +433,7 @@
     <string name="gallery_no_media">Tidak ada media</string>
     <string name="gallery_photos_videos_appear_here">Foto dan video muncul di sini setelah Anda mengimpor atau mencadangkannya.</string>
     <string name="gallery_tab_albums">Album</string>
+    <string name="gallery_tab_audio">Audio</string>
     <string name="gallery_tab_all">Semua</string>
     <string name="gallery_tab_photos">Foto</string>
     <string name="gallery_tab_videos">Video</string>
@@ -726,6 +727,8 @@
 
     <!-- Settings: appearance -->
     <string name="settings_archived_shortcut">Pintasan ke Arsip</string>
+    <string name="settings_media_in_files">Foto dan video di File</string>
+    <string name="settings_media_in_files_subtitle">Tampilkan foto, video, dan audio di daftar File. Nonaktifkan agar hanya muncul di Galeri.</string>
     <string name="settings_compact_layout">Tata letak ringkas (compact)</string>
     <string name="settings_dynamic_color">Warna dinamis</string>
     <string name="settings_gallery_grid_columns">Kolom grid galeri</string>

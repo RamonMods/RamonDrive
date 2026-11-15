@@ -36,6 +36,8 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -170,6 +172,7 @@ private fun GalleryTabSelector(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .horizontalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
     ) {
@@ -184,8 +187,7 @@ private fun GalleryTabSelector(
 
                     else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                 },
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 10.dp),
-                modifier = Modifier.weight(1f)
+                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
             ) {
                 Text(
                     text = stringResource(tab.labelRes),

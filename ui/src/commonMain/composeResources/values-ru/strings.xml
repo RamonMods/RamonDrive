@@ -461,6 +461,7 @@
     <string name="gallery_no_media">Нет медиафайлов</string>
     <string name="gallery_photos_videos_appear_here">Фотографии и видео появятся здесь после импорта или бэкапа.</string>
     <string name="gallery_tab_albums">Альбомы</string>
+    <string name="gallery_tab_audio">Аудио</string>
     <string name="gallery_tab_all">Все</string>
     <string name="gallery_tab_photos">Фотографии</string>
     <string name="gallery_tab_videos">Видео</string>
@@ -748,6 +749,8 @@
 
     <!-- Settings: appearance -->
     <string name="settings_archived_shortcut">Ярлык архива</string>
+    <string name="settings_media_in_files">Фото и видео в Файлах</string>
+    <string name="settings_media_in_files_subtitle">Показывать фото, видео и аудио в списке Файлов. Отключите, чтобы они были только в Галерее.</string>
     <string name="settings_compact_layout">Компактный вид</string>
     <string name="settings_dynamic_color">Динамические цвета</string>
     <string name="settings_gallery_grid_columns">Колонок в сетке галереи</string>

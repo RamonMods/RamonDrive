@@ -55,6 +55,12 @@ object FileQueryBuilder {
             where.append(" AND category IN (${spec.categories.joinToString(",") { "?" }})")
             args.addAll(spec.categories.map { it.name })
         }
+        if (spec.excludedCategories.isNotEmpty()) {
+            where.append(
+                " AND category NOT IN (${spec.excludedCategories.joinToString(",") { "?" }})"
+            )
+            args.addAll(spec.excludedCategories.map { it.name })
+        }
         spec.nameQuery?.takeIf { it.isNotBlank() }?.let {
             where.append(" AND name LIKE ? ESCAPE '\\'")
             args.add("%${escapeLike(it)}%")

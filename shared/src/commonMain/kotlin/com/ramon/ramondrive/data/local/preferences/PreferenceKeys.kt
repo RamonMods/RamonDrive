@@ -46,6 +46,7 @@ object PreferenceKeys {
     val LAYOUT_DENSITY = stringPreferencesKey("layout_density")
     val SHOW_HIDDEN_FILES = booleanPreferencesKey("show_hidden_files")
     val SHOW_ARCHIVED_FILES = booleanPreferencesKey("show_archived_files")
+    val SHOW_MEDIA_IN_FILES = booleanPreferencesKey("show_media_in_files")
     val SHOW_RECENT_FILES = booleanPreferencesKey("show_recent_files")
     val LINK_PREVIEWS = booleanPreferencesKey("link_previews")
     val UPDATE_CHECK_ENABLED = booleanPreferencesKey("update_check_enabled")

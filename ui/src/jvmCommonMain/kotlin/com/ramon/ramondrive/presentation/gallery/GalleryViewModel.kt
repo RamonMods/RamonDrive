@@ -117,7 +117,9 @@ class GalleryViewModel(
             categories = when (currentTab) {
                 GalleryTab.PHOTOS -> listOf(FileCategory.IMAGE)
                 GalleryTab.VIDEOS -> listOf(FileCategory.VIDEO)
-                else -> listOf(FileCategory.IMAGE, FileCategory.VIDEO)
+                GalleryTab.AUDIO -> listOf(FileCategory.AUDIO)
+                GalleryTab.ALL, GalleryTab.ALBUMS ->
+                    listOf(FileCategory.IMAGE, FileCategory.VIDEO)
             },
             showHidden = false,
             showArchived = false,
@@ -141,7 +143,9 @@ class GalleryViewModel(
             categories = when (current) {
                 GalleryTab.PHOTOS -> listOf(FileCategory.IMAGE)
                 GalleryTab.VIDEOS -> listOf(FileCategory.VIDEO)
-                else -> listOf(FileCategory.IMAGE, FileCategory.VIDEO)
+                GalleryTab.AUDIO -> listOf(FileCategory.AUDIO)
+                GalleryTab.ALL, GalleryTab.ALBUMS ->
+                    listOf(FileCategory.IMAGE, FileCategory.VIDEO)
             },
             sortField = field,
             sortDirection = dir

@@ -436,6 +436,7 @@
     <string name="gallery_no_media">Nenhuma mídia</string>
     <string name="gallery_photos_videos_appear_here">Fotos e vídeos aparecem aqui após importação ou backup.</string>
     <string name="gallery_tab_albums">Álbuns</string>
+    <string name="gallery_tab_audio">Áudios</string>
     <string name="gallery_tab_all">Tudo</string>
     <string name="gallery_tab_photos">Fotos</string>
     <string name="gallery_tab_videos">Vídeos</string>
@@ -723,6 +724,8 @@
 
     <!-- Settings: appearance -->
     <string name="settings_archived_shortcut">Atalho para Arquivados</string>
+    <string name="settings_media_in_files">Fotos e vídeos em Arquivos</string>
+    <string name="settings_media_in_files_subtitle">Mostrar fotos, vídeos e áudios na lista de Arquivos. Desative para vê-los apenas na Galeria.</string>
     <string name="settings_compact_layout">Layout compacto</string>
     <string name="settings_dynamic_color">Cor dinâmica</string>
     <string name="settings_gallery_grid_columns">Colunas da grade na galeria</string>

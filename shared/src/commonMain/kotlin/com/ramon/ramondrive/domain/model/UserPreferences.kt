@@ -37,6 +37,7 @@ data class UserPreferences(
     val layoutDensity: LayoutDensity = LayoutDensity.COMFORTABLE,
     val showHiddenFiles: Boolean = true,
     val showArchivedFiles: Boolean = true,
+    val showMediaInFiles: Boolean = true,
     val showRecentFiles: Boolean = true,
     val linkPreviews: Boolean = true,
     val textPreviewScale: Float = 1f,

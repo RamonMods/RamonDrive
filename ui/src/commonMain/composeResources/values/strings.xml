@@ -436,6 +436,7 @@
     <string name="gallery_no_media">No media</string>
     <string name="gallery_photos_videos_appear_here">Photos and videos appear here after import or backup.</string>
     <string name="gallery_tab_albums">Albums</string>
+    <string name="gallery_tab_audio">Audio</string>
     <string name="gallery_tab_all">All</string>
     <string name="gallery_tab_photos">Photos</string>
     <string name="gallery_tab_videos">Videos</string>
@@ -723,6 +724,8 @@
 
     <!-- Settings: appearance -->
     <string name="settings_archived_shortcut">Archived shortcut</string>
+    <string name="settings_media_in_files">Photos and videos in Files</string>
+    <string name="settings_media_in_files_subtitle">Show photos, videos and audio in the Files list. Turn off to keep them only in the Gallery.</string>
     <string name="settings_compact_layout">Compact layout</string>
     <string name="settings_dynamic_color">Dynamic color</string>
     <string name="settings_gallery_grid_columns">Gallery grid columns</string>

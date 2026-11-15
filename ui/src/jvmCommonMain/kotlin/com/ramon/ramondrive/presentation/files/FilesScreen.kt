@@ -394,6 +394,16 @@ fun FilesScreen(
                                         }
                                     )
                                 }
+                                if (state.folderInSelection || state.capabilities.canDownload) {
+                                    IconButton(onClick = viewModel::downloadSelected) {
+                                        Icon(
+                                            Icons.Filled.Download,
+                                            contentDescription = stringResource(
+                                                Res.string.common_download
+                                            )
+                                        )
+                                    }
+                                }
                                 IconButton(onClick = { showMovePicker = true }) {
                                     Icon(
                                         Icons.AutoMirrored.Filled.DriveFileMove,

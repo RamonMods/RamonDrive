@@ -5,6 +5,7 @@ data class FileQuerySpec(
     val folderId: String? = null,
     val filterByFolder: Boolean = false,
     val categories: List<FileCategory> = emptyList(),
+    val excludedCategories: List<FileCategory> = emptyList(),
     val nameQuery: String? = null,
     val extension: String? = null,
     val minSizeBytes: Long? = null,

@@ -433,6 +433,7 @@
     <string name="gallery_no_media">Sin archivos multimedia</string>
     <string name="gallery_photos_videos_appear_here">Las fotos y los videos aparecen aquí después de importarlos o respaldarlos.</string>
     <string name="gallery_tab_albums">Álbumes</string>
+    <string name="gallery_tab_audio">Audios</string>
     <string name="gallery_tab_all">Todo</string>
     <string name="gallery_tab_photos">Fotos</string>
     <string name="gallery_tab_videos">Videos</string>
@@ -720,6 +721,8 @@
 
     <!-- Settings: appearance -->
     <string name="settings_archived_shortcut">Acceso directo a Archivados</string>
+    <string name="settings_media_in_files">Fotos y videos en Archivos</string>
+    <string name="settings_media_in_files_subtitle">Mostrar fotos, videos y audios en la lista de Archivos. Desactiva para verlos solo en la Galería.</string>
     <string name="settings_compact_layout">Diseño compacto</string>
     <string name="settings_dynamic_color">Color dinámico</string>
     <string name="settings_gallery_grid_columns">Columnas de la cuadrícula de la galería</string>
